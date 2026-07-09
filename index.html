@@ -195,6 +195,41 @@ h2.unit::after{content:"";flex:1;height:1px;background:var(--border)}
 .a2hs-txt b{font-weight:900}
 .a2hs-x{background:none;border:none;color:#fff;font-size:1.2rem;cursor:pointer;opacity:.8;flex:none}
 
+/* install guide modal */
+#installModal{
+  position:fixed;inset:0;z-index:400;background:rgba(6,8,16,.82);backdrop-filter:blur(8px);
+  display:none;align-items:center;justify-content:center;padding:18px;
+}
+#installModal.show{display:flex;animation:fadeIn .25s ease}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.im-card{
+  background:var(--panel);border:1px solid var(--border);border-radius:22px;
+  width:min(440px,100%);max-height:86vh;overflow-y:auto;position:relative;
+  padding:22px 20px 18px;animation:pop .35s cubic-bezier(.3,1.4,.5,1);
+}
+.im-close{position:absolute;top:14px;right:16px;background:none;border:none;color:var(--muted);font-size:1.3rem;cursor:pointer}
+.im-close:hover{color:var(--ink)}
+.im-head{display:flex;gap:14px;align-items:center;margin-bottom:18px;padding-right:24px}
+.im-cat{font-size:2.6rem;filter:drop-shadow(0 3px 10px rgba(124,92,255,.5))}
+.im-title{font-size:1.25rem;font-weight:900}
+.im-sub{font-size:.78rem;color:var(--muted);margin-top:2px;line-height:1.3}
+.im-tabs{display:flex;gap:8px;margin-bottom:18px}
+.im-tab{
+  flex:1;background:var(--surface);border:1px solid var(--border);color:var(--muted);
+  padding:10px;border-radius:12px;cursor:pointer;font-weight:700;font-size:.85rem;transition:all .2s;
+}
+.im-tab.active{background:var(--neon);color:#fff;border-color:var(--neon)}
+.im-step{display:flex;gap:14px;align-items:flex-start;padding:12px 4px;border-bottom:1px solid var(--border)}
+.im-step:last-child{border-bottom:none}
+.im-num{
+  flex:none;width:30px;height:30px;border-radius:50%;background:linear-gradient(145deg,var(--gold),#ffb347);
+  color:#4a3200;font-weight:900;display:flex;align-items:center;justify-content:center;font-size:.95rem;
+}
+.im-step .im-ico{font-size:1.5rem}
+.im-step .im-text{flex:1;line-height:1.4;font-size:.9rem}
+.im-step .im-text b{color:var(--gold)}
+.im-foot{text-align:center;color:var(--muted);font-size:.75rem;margin-top:14px}
+
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
@@ -249,7 +284,27 @@ h2.unit::after{content:"";flex:1;height:1px;background:var(--border)}
   </div>
 
   <div class="bubble" id="bubble"></div>
-  <div class="mascot" id="mascot" onclick="mascotTalk()">🐈‍⬛</div>
+  <div class="mascot" id="mascot" onclick="openInstall()" title="How to install">🐈‍⬛</div>
+
+  <!-- ===== Install guide modal ===== -->
+  <div id="installModal" onclick="if(event.target===this)closeInstall()">
+    <div class="im-card">
+      <button class="im-close" onclick="closeInstall()">✕</button>
+      <div class="im-head">
+        <div class="im-cat">🐈‍⬛</div>
+        <div>
+          <div class="im-title">Install MINUIT</div>
+          <div class="im-sub">Your Paris-night French app — free, offline, no App Store</div>
+        </div>
+      </div>
+      <div class="im-tabs">
+        <button class="im-tab active" onclick="setPlatform('ios',this)">📱 iPhone</button>
+        <button class="im-tab" onclick="setPlatform('android',this)">🤖 Android</button>
+      </div>
+      <div class="im-body" id="imBody"></div>
+      <div class="im-foot">Already installed? Just open it from your home screen. 🌙</div>
+    </div>
+  </div>
   <div class="checkBar" id="checkBar" style="display:none">
     <div class="checkInner">
       <div class="feedback" id="feedback"></div>
@@ -618,7 +673,7 @@ const LINES=[
   "Tip: 'Je voudrais' + pointing = survival in all of France.",
   "The night is dark and full of verbs. ⚡",
   "Streaks are earned after midnight... or any time, really.",
-  "Perdu ? Cliquez le hibou— non, le CHAT. Cliquez le chat. 🐈‍⬛"
+  "Perdu ? Open the install guide — tap me, then 'Add to Home Screen'. 📲"
 ];
 function mascotTalk(){
   const b=document.getElementById('bubble');
@@ -626,6 +681,34 @@ function mascotTalk(){
   b.classList.add('show');clearTimeout(mascotTalk.t);
   mascotTalk.t=setTimeout(()=>b.classList.remove('show'),4200);
 }
+
+/* ================= INSTALL GUIDE ================= */
+const INSTALL={
+  ios:[
+    {ico:"🌐",text:"Open <b>minuit</b> in <b>Safari</b> — this guide only works in Safari, not in-app browsers."},
+    {ico:"⤴️",text:"Tap the <b>Share</b> button (the square with an up-arrow) at the bottom of the screen."},
+    {ico:"📲",text:"Scroll the menu and tap <b>“Add to Home Screen”</b>."},
+    {ico:"✏️",text:"Keep the name <b>MINUIT</b> (or rename it) and tap <b>Add</b> top-right."},
+    {ico:"🌙",text:"Close Safari. The <b>MINUIT</b> icon is now on your home screen — tap it to open fullscreen, offline."},
+  ],
+  android:[
+    {ico:"🌐",text:"Open <b>minuit</b> in <b>Chrome</b> (or your default browser)."},
+    {ico:"⋮",text:"Tap the <b>⋮ menu</b> (three dots) in the top-right corner."},
+    {ico:"➕",text:"Tap <b>“Install app”</b> or <b>“Add to Home screen”</b>."},
+    {ico:"✔️",text:"Confirm by tapping <b>Install</b> in the popup."},
+    {ico:"🌙",text:"The <b>MINUIT</b> icon appears on your home screen — tap to open like a native app, works offline."},
+  ]
+};
+function openInstall(){document.getElementById('installModal').classList.add('show');setPlatform('ios',document.querySelector('.im-tab'));}
+function closeInstall(){document.getElementById('installModal').classList.remove('show');}
+function setPlatform(p,tab){
+  document.querySelectorAll('.im-tab').forEach(t=>t.classList.remove('active'));
+  if(tab)tab.classList.add('active');
+  document.getElementById('imBody').innerHTML=INSTALL[p].map((s,i)=>
+    `<div class="im-step"><div class="im-num">${i+1}</div><div class="im-ico">${s.ico}</div><div class="im-text">${s.text}</div></div>`
+  ).join('');
+}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeInstall();});
 
 /* keyboard: 1-4 select option, Enter = check */
 document.addEventListener('keydown',e=>{
