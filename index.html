@@ -3,319 +3,400 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>MINUIT — Learn French Under the Paris Night Sky</title>
+<title>MINUIT — Learn French</title>
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
-<meta name="theme-color" content="#0b0e1a">
+<meta name="theme-color" content="#e52521">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="MINUIT">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Press+Start+2P&display=swap" rel="stylesheet">
 <style>
 :root{
-  --night:#0b0e1a; --night2:#131730; --panel:#1a1f3d; --panel2:#222855;
-  --border:#2e3566; --ink:#eef0ff; --muted:#8b91c7;
-  --gold:#ffd166; --neon:#7c5cff; --pink:#ff5c9d; --green:#3ddc97; --red:#ff5c6c;
-  --radius:18px;
+  --sky:#8ecbff; --sky2:#cdeeff; --cloud:#ffffff;
+  --ground:#c8743a; --brick:#e0853c; --brickLine:#a85f25;
+  --block:#f7c948; --blockEdge:#b5740f; --blockShade:#d99a1f;
+  --pipe:#3bbf57; --pipeDark:#2a9e44;
+  --red:#e52521; --coin:#ffd24a; --ink:#2b2440; --muted:#7a6f96;
+  --panel:#fff7e6; --panel2:#ffe9c2; --border:#d8ab5e;
+  --green:#3bbf57; --redX:#e52521; --gold:#ffd24a; --blue:#4f86ff;
+  --radius:16px;
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 body{
-  background:var(--night); color:var(--ink); min-height:100vh;
-  font-family:"Avenir Next","Nunito","Segoe UI",system-ui,sans-serif;
+  color:var(--ink); min-height:100vh; font-family:"Baloo 2","Avenir Next",system-ui,sans-serif;
   overflow-x:hidden;
+  background:
+    radial-gradient(circle at 18% 12%, rgba(255,255,255,.9) 0 6px, transparent 7px),
+    radial-gradient(circle at 22% 12%, rgba(255,255,255,.9) 0 14px, transparent 15px),
+    radial-gradient(circle at 75% 20%, rgba(255,255,255,.85) 0 5px, transparent 6px),
+    radial-gradient(circle at 79% 20%, rgba(255,255,255,.85) 0 11px, transparent 12px),
+    linear-gradient(180deg,var(--sky) 0%, var(--sky2) 55%, #eaf7ff 100%);
 }
-/* starfield */
-#stars{position:fixed;inset:0;z-index:0;pointer-events:none}
-.star{position:absolute;background:#fff;border-radius:50%;opacity:.7;animation:twinkle 3s infinite alternate}
-@keyframes twinkle{from{opacity:.15}to{opacity:.8}}
-#app{position:relative;z-index:1;max-width:560px;margin:0 auto;padding:0 16px 120px}
+/* brick ground footer decoration */
+#ground{position:fixed;left:0;right:0;bottom:0;height:54px;z-index:0;pointer-events:none;
+  background:
+    repeating-linear-gradient(90deg,var(--brick) 0 38px, var(--brickLine) 38px 40px),
+    var(--ground);
+  border-top:5px solid #8a4f1e;
+  box-shadow:inset 0 4px 0 rgba(255,255,255,.25);
+  background-size:40px 27px, 100% 100%;
+}
+#app{position:relative;z-index:1;max-width:560px;margin:0 auto;padding:0 16px 150px}
 
 /* ===== top bar ===== */
-#topbar{
-  position:sticky;top:0;z-index:40;display:flex;align-items:center;gap:14px;
-  padding:14px 4px;background:linear-gradient(180deg,var(--night) 75%,transparent);
-}
-.logo{font-size:1.35rem;font-weight:900;letter-spacing:2px}
-.logo .moon{margin-right:6px}
-.logo span.m{color:var(--gold)}
-.stat{display:flex;align-items:center;gap:5px;font-weight:800;font-size:.95rem}
-.stat.streak{color:var(--gold)} .stat.xp{color:var(--neon)} .stat.hearts{color:var(--pink)}
+#topbar{position:sticky;top:0;z-index:40;display:flex;align-items:center;gap:12px;padding:14px 4px 10px}
+.logo{font-family:"Press Start 2P",monospace;font-size:1rem;color:var(--red);text-shadow:2px 2px 0 #fff,3px 3px 0 #b51410;letter-spacing:1px}
+.logo .moon{margin-right:4px}
+.logo span.m{color:var(--blue);text-shadow:2px 2px 0 #fff,3px 3px 0 #1d4fb5}
 .spacer{flex:1}
+.stat{display:flex;align-items:center;gap:5px;font-weight:800;font-size:1rem;background:var(--panel);
+  border:3px solid var(--border);border-radius:14px;padding:5px 11px;box-shadow:0 3px 0 #b98a3e}
+.stat .lbl{font-size:.6rem;color:var(--muted);font-weight:800;text-transform:uppercase;letter-spacing:.5px}
+.stat.streak{color:#ff7a00} .stat.coin{color:#b5860a}
+.langbtn{background:var(--red);border:3px solid #b51410;color:#fff;font-family:"Press Start 2P",monospace;
+  font-size:.65rem;padding:9px 10px;border-radius:14px;cursor:pointer;box-shadow:0 3px 0 #7d0e0b;transition:transform .1s}
+.langbtn:active{transform:translateY(3px);box-shadow:none}
 
 /* ===== path ===== */
-#pathView h2.unit{
-  margin:26px 0 6px;font-size:1rem;letter-spacing:3px;text-transform:uppercase;color:var(--muted);
-  display:flex;align-items:center;gap:10px;
-}
-h2.unit::after{content:"";flex:1;height:1px;background:var(--border)}
-.unitDesc{color:var(--muted);font-size:.85rem;margin-bottom:18px}
-.path{display:flex;flex-direction:column;gap:26px;padding:6px 0 10px}
-.node{
-  width:86px;height:86px;border-radius:50%;position:relative;cursor:pointer;
-  display:flex;align-items:center;justify-content:center;font-size:2rem;
-  background:var(--panel);border:4px solid var(--border);
-  box-shadow:0 6px 0 #0d1128;transition:transform .15s;
-  align-self:center;
-}
-.node:nth-child(3n+1){align-self:flex-start;margin-left:16%}
-.node:nth-child(3n){align-self:flex-end;margin-right:16%}
-.node:active{transform:translateY(4px);box-shadow:0 2px 0 #0d1128}
-.node.done{background:linear-gradient(145deg,var(--gold),#ffb347);border-color:#ffe3a1;color:#4a3200}
-.node.next{background:linear-gradient(145deg,var(--neon),#5a3cf0);border-color:#a794ff;animation:bounce 1.6s infinite}
-.node.locked{opacity:.42;cursor:not-allowed;filter:grayscale(.6)}
-@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
-.node .label{
-  position:absolute;bottom:-24px;left:50%;transform:translateX(-50%);
-  font-size:.68rem;color:var(--muted);white-space:nowrap;font-weight:700;letter-spacing:.5px;
-}
-.node.next .label{color:var(--ink)}
-.node .crown{position:absolute;top:-14px;right:-6px;font-size:1.1rem;animation:twinkle 2s infinite alternate}
-.mascot{
-  position:fixed;bottom:18px;right:18px;font-size:2.6rem;z-index:30;cursor:pointer;
-  filter:drop-shadow(0 4px 10px rgba(124,92,255,.5));transition:transform .2s;
-}
+#pathView h2.unit{margin:24px 0 4px;font-family:"Press Start 2P",monospace;font-size:.7rem;color:#fff;
+  text-shadow:2px 2px 0 var(--pipeDark);display:flex;align-items:center;gap:10px;letter-spacing:1px}
+h2.unit::after{content:"";flex:1;height:4px;background:repeating-linear-gradient(90deg,var(--block) 0 8px,var(--blockEdge) 8px 12px);border-radius:3px}
+.unitDesc{color:#3a3357;font-weight:700;font-size:.85rem;margin-bottom:16px;text-shadow:0 1px 0 #fff}
+.path{display:flex;flex-direction:column;gap:30px;padding:8px 0 14px}
+.node{width:84px;height:84px;border-radius:16px;position:relative;cursor:pointer;
+  background:linear-gradient(180deg,var(--block),#f3b322);border:4px solid var(--blockEdge);
+  box-shadow:inset 0 -8px 0 var(--blockShade),0 6px 0 #8a5a0e;
+  display:flex;align-items:center;justify-content:center;font-family:"Press Start 2P",monospace;
+  font-size:1.7rem;color:#7a4a08;align-self:center;transition:transform .12s}
+.node:nth-child(3n+1){align-self:flex-start;margin-left:14%}
+.node:nth-child(3n){align-self:flex-end;margin-right:14%}
+.node:active{transform:translateY(4px);box-shadow:inset 0 -8px 0 var(--blockShade),0 2px 0 #8a5a0e}
+.node .q{text-shadow:2px 2px 0 #ffe9a8}
+.node.done{background:radial-gradient(circle at 38% 32%,#fff3b0,var(--coin));color:#b5860a}
+.node.done .q{display:none}
+.node.done::after{content:"★";font-size:2rem}
+.node.next{background:linear-gradient(180deg,var(--red),#c01612);color:#fff;border-color:#7d0e0b;
+  box-shadow:inset 0 -8px 0 #9c100d,0 6px 0 #6e0b08,0 0 18px 3px rgba(255,210,74,.8);animation:bounce 1.5s infinite}
+.node.next .q{color:#fff;text-shadow:2px 2px 0 #7d0e0b}
+.node.locked{filter:grayscale(.85) brightness(.85);opacity:.7;cursor:not-allowed}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.node .label{position:absolute;bottom:-26px;left:50%;transform:translateX(-50%);
+  font-size:.74rem;font-weight:800;color:#3a3357;white-space:nowrap;text-shadow:0 1px 0 #fff}
+.node.next .label{color:var(--red)}
+.node .crown{position:absolute;top:-16px;right:-8px;font-size:1.2rem;animation:spin 3s infinite linear}
+@keyframes spin{to{transform:rotate(360deg)}}
+.mascot{position:fixed;bottom:64px;right:18px;font-size:2.8rem;z-index:30;cursor:pointer;
+  filter:drop-shadow(0 4px 8px rgba(0,0,0,.3));transition:transform .2s}
 .mascot:hover{transform:scale(1.15) rotate(-8deg)}
-.bubble{
-  position:fixed;bottom:86px;right:20px;z-index:30;background:var(--panel2);border:1px solid var(--border);
-  padding:10px 14px;border-radius:14px 14px 2px 14px;font-size:.82rem;max-width:230px;
-  opacity:0;transform:translateY(8px);transition:all .3s;pointer-events:none;
-}
+.bubble{position:fixed;bottom:140px;right:20px;z-index:30;background:var(--panel);border:3px solid var(--border);
+  padding:10px 14px;border-radius:16px 16px 4px 16px;font-size:.82rem;max-width:230px;font-weight:700;color:var(--ink);
+  opacity:0;transform:translateY(8px);transition:all .3s;pointer-events:none;box-shadow:0 4px 0 #b98a3e}
 .bubble.show{opacity:1;transform:none}
 
 /* ===== lesson ===== */
 #lessonView{display:none}
-.lessonTop{display:flex;align-items:center;gap:12px;padding:16px 0}
-.quit{background:none;border:none;color:var(--muted);font-size:1.5rem;cursor:pointer}
-.lbar{flex:1;height:14px;background:var(--panel);border-radius:99px;overflow:hidden}
-.lfill{height:100%;width:0%;background:linear-gradient(90deg,var(--green),#7ef7c6);border-radius:99px;transition:width .4s cubic-bezier(.3,1.3,.5,1)}
-.lhearts{font-weight:800;color:var(--pink)}
-.exType{color:var(--muted);font-size:.8rem;letter-spacing:2px;text-transform:uppercase;margin:14px 0 8px}
-.prompt{font-size:1.5rem;font-weight:800;margin-bottom:6px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-.hearBtn{
-  background:var(--neon);border:none;border-radius:12px;color:#fff;font-size:1.3rem;
-  width:52px;height:52px;cursor:pointer;box-shadow:0 4px 0 #4a35b8;transition:transform .1s;
-}
+.lessonTop{display:flex;align-items:center;gap:12px;padding:14px 0}
+.quit{background:var(--panel);border:3px solid var(--border);border-radius:12px;color:var(--ink);
+  font-size:1.3rem;width:42px;height:42px;cursor:pointer;font-weight:900;box-shadow:0 3px 0 #b98a3e}
+.quit:active{transform:translateY(3px);box-shadow:none}
+.lbar{flex:1;height:16px;background:var(--panel);border:3px solid var(--border);border-radius:99px;overflow:hidden;box-shadow:inset 0 2px 0 rgba(0,0,0,.1)}
+.lfill{height:100%;width:0%;background:repeating-linear-gradient(90deg,var(--green) 0 10px,var(--pipeDark) 10px 14px);border-radius:99px;transition:width .4s cubic-bezier(.3,1.3,.5,1)}
+.lhearts{font-weight:900;color:var(--redX);font-size:1.1rem}
+.exType{font-family:"Press Start 2P",monospace;color:#fff;text-shadow:2px 2px 0 var(--pipeDark);font-size:.62rem;text-transform:uppercase;margin:14px 0 8px;letter-spacing:.5px}
+.prompt{font-size:1.5rem;font-weight:800;margin-bottom:6px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;color:var(--ink)}
+.hearBtn{background:var(--red);border:3px solid #b51410;color:#fff;font-size:1.3rem;width:54px;height:54px;
+  cursor:pointer;border-radius:14px;box-shadow:0 4px 0 #7d0e0b;transition:transform .1s}
 .hearBtn:active{transform:translateY(3px);box-shadow:none}
-.pron{color:var(--muted);font-style:italic;font-size:.9rem;margin-bottom:18px}
-.opts{display:grid;gap:12px;margin:20px 0}
-.opt{
-  background:var(--panel);border:2px solid var(--border);border-bottom-width:4px;color:var(--ink);
-  padding:16px;border-radius:var(--radius);cursor:pointer;font-size:1.05rem;font-weight:600;
-  text-align:left;transition:all .15s;display:flex;gap:12px;align-items:center;
-}
-.opt .key{
-  width:26px;height:26px;border:1px solid var(--border);border-radius:7px;color:var(--muted);
-  display:inline-flex;align-items:center;justify-content:center;font-size:.75rem;flex:none;
-}
-.opt:hover{border-color:var(--neon);background:var(--panel2);transform:translateY(-2px)}
-.opt.sel{border-color:var(--neon);background:#241f55}
-.opt.right{border-color:var(--green);background:rgba(61,220,151,.14);animation:pop .35s}
-.opt.wrong{border-color:var(--red);background:rgba(255,92,108,.14);animation:shake .35s}
+.pron{color:#5a4f7a;font-style:italic;font-weight:700;font-size:.9rem;margin-bottom:16px}
+.opts{display:grid;gap:12px;margin:18px 0}
+.opt{background:var(--panel);border:3px solid var(--border);border-bottom-width:6px;color:var(--ink);
+  padding:15px 16px;border-radius:var(--radius);cursor:pointer;font-size:1.05rem;font-weight:800;
+  text-align:left;transition:all .14s;display:flex;gap:12px;align-items:center}
+.opt .key{width:28px;height:28px;border:2px solid var(--border);border-radius:8px;color:var(--muted);
+  display:inline-flex;align-items:center;justify-content:center;font-size:.75rem;background:var(--panel2);font-family:"Press Start 2P",monospace}
+.opt:hover{border-color:var(--blue);background:var(--panel2);transform:translateY(-2px)}
+.opt.sel{border-color:var(--blue);background:#dcebff}
+.opt.right{border-color:var(--green);background:#dff7e6;animation:pop .35s}
+.opt.wrong{border-color:var(--redX);background:#ffe0df;animation:shake .35s}
 @keyframes pop{50%{transform:scale(1.03)}}
 @keyframes shake{25%{transform:translateX(-7px)}75%{transform:translateX(7px)}}
-/* word bank */
-.answerZone{
-  min-height:60px;border-bottom:2px solid var(--border);display:flex;gap:8px;flex-wrap:wrap;
-  padding:10px 2px;margin:16px 0 22px;
-}
+.answerZone{min-height:62px;border:3px dashed var(--border);border-radius:var(--radius);background:var(--panel);
+  display:flex;gap:8px;flex-wrap:wrap;padding:10px;margin:16px 0 22px}
 .bank{display:flex;gap:8px;flex-wrap:wrap}
-.chip{
-  background:var(--panel);border:2px solid var(--border);border-bottom-width:4px;color:var(--ink);
-  padding:10px 16px;border-radius:14px;cursor:pointer;font-weight:700;font-size:1rem;transition:all .15s;
-}
-.chip:hover{transform:translateY(-2px);border-color:var(--neon)}
+.chip{background:var(--block);border:3px solid var(--blockEdge);border-bottom-width:6px;color:#7a4a08;
+  padding:9px 15px;border-radius:14px;cursor:pointer;font-weight:800;font-size:1rem;transition:all .14s;font-family:inherit}
+.chip:hover{transform:translateY(-2px)}
 .chip.used{opacity:.25;pointer-events:none}
-.answerZone .chip{background:var(--panel2);border-color:var(--neon)}
-/* type input */
-.typeIn{
-  width:100%;background:var(--panel);border:2px solid var(--border);border-radius:var(--radius);
-  color:var(--ink);padding:16px;font-size:1.1rem;margin:16px 0;outline:none;font-family:inherit;
-}
-.typeIn:focus{border-color:var(--neon)}
-/* check bar */
-.checkBar{
-  position:fixed;bottom:0;left:0;right:0;z-index:45;padding:16px;
-  background:var(--night2);border-top:2px solid var(--border);
-}
-.checkInner{max-width:560px;margin:0 auto;display:flex;align-items:center;gap:14px}
-.feedback{flex:1;font-weight:800;font-size:1.05rem;display:none}
+.answerZone .chip{background:var(--blue);border-color:#1d4fb5;color:#fff}
+.typeIn{width:100%;background:var(--panel);border:3px solid var(--border);border-radius:var(--radius);
+  color:var(--ink);padding:15px;font-size:1.1rem;margin:16px 0;outline:none;font-family:inherit;font-weight:700}
+.typeIn:focus{border-color:var(--blue)}
+.checkBar{position:fixed;bottom:0;left:0;right:0;z-index:45;padding:14px;background:var(--panel);border-top:4px solid var(--border)}
+.checkInner{max-width:560px;margin:0 auto;display:flex;align-items:center;gap:12px}
+.feedback{flex:1;font-weight:800;font-size:.95rem;display:none;line-height:1.3}
 .feedback.good{display:block;color:var(--green)}
-.feedback.bad{display:block;color:var(--red)}
-.feedback small{display:block;font-weight:600;color:var(--muted);font-size:.8rem}
-.bigBtn{
-  background:var(--green);border:none;color:#06301f;font-weight:900;font-size:1rem;letter-spacing:1px;
-  padding:15px 34px;border-radius:16px;cursor:pointer;box-shadow:0 4px 0 #1d9c68;
-  transition:all .15s;text-transform:uppercase;margin-left:auto;
-}
-.bigBtn:disabled{background:var(--panel);color:var(--muted);box-shadow:0 4px 0 #10132a;cursor:not-allowed}
+.feedback.bad{display:block;color:var(--redX)}
+.feedback small{display:block;font-weight:700;color:#5a4f7a;font-size:.78rem;margin-top:2px}
+.bigBtn{background:var(--green);border:3px solid #1d7a3a;color:#053b18;font-family:"Press Start 2P",monospace;
+  font-size:.7rem;letter-spacing:1px;padding:15px 26px;border-radius:16px;cursor:pointer;box-shadow:0 4px 0 #14632e;
+  transition:all .14s;text-transform:uppercase;margin-left:auto}
+.bigBtn:disabled{background:#cbd5e0;border-color:#9aa6b2;color:#7a8694;box-shadow:0 4px 0 #8492a0;cursor:not-allowed}
 .bigBtn:not(:disabled):active{transform:translateY(3px);box-shadow:none}
-.bigBtn.continue{background:var(--gold);box-shadow:0 4px 0 #c79b2f;color:#4a3200}
-/* results */
-#resultView{display:none;text-align:center;padding-top:10vh}
+.bigBtn.continue{background:var(--coin);border-color:#b5860a;color:#5a3f00;box-shadow:0 4px 0 #8a6608}
+
+/* ===== results ===== */
+#resultView{display:none;text-align:center;padding-top:8vh}
 .resEmoji{font-size:4.5rem;animation:bounce 1.4s infinite}
-#resultView h2{font-size:1.8rem;margin:14px 0 6px}
-#resultView p{color:var(--muted);margin-bottom:26px}
-.resStats{display:flex;gap:14px;justify-content:center;margin-bottom:34px}
-.resBox{background:var(--panel);border:2px solid var(--border);border-radius:var(--radius);padding:16px 22px;min-width:110px}
-.resBox .n{font-size:1.5rem;font-weight:900}
-.resBox .t{font-size:.72rem;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;margin-top:4px}
-.confetti{position:fixed;top:-14px;font-size:1.3rem;z-index:200;animation:fall linear forwards;pointer-events:none}
-@keyframes fall{to{transform:translateY(105vh) rotate(720deg);opacity:.2}}
+#resultView h2{font-family:"Press Start 2P",monospace;font-size:.95rem;margin:14px 0 6px;color:var(--red);text-shadow:2px 2px 0 #fff}
+#resultView p{color:#3a3357;font-weight:700;margin-bottom:22px}
+.resStats{display:flex;gap:12px;justify-content:center;margin-bottom:30px;flex-wrap:wrap}
+.resBox{background:var(--panel);border:3px solid var(--border);border-radius:var(--radius);padding:14px 18px;min-width:104px;box-shadow:0 4px 0 #b98a3e}
+.resBox .n{font-size:1.5rem;font-weight:900;font-family:"Press Start 2P",monospace}
+.resBox .t{font-size:.6rem;color:var(--muted);font-weight:800;text-transform:uppercase;margin-top:6px;letter-spacing:.5px}
 
-/* ===== native iOS polish ===== */
-#app{padding-bottom:calc(120px + env(safe-area-inset-bottom));padding-top:env(safe-area-inset-top)}
-#topbar{padding-top:max(14px,env(safe-area-inset-top))}
-#progress{bottom:env(safe-area-inset-bottom)}
-.checkBar{bottom:env(safe-area-inset-bottom)}
-.mascot{bottom:calc(18px + env(safe-area-inset-bottom));right:calc(18px + env(safe-area-inset-right))}
-.bubble{bottom:calc(86px + env(safe-area-inset-bottom));right:calc(20px + env(safe-area-inset-right))}
-
-/* launch splash */
-#splash{
-  position:fixed;inset:0;z-index:999;background:var(--night);
-  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;
-  transition:opacity .5s ease;
-}
+/* ===== splash ===== */
+#splash{position:fixed;inset:0;z-index:999;background:linear-gradient(180deg,var(--sky),var(--sky2));
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;transition:opacity .5s ease}
 #splash.hide{opacity:0;pointer-events:none}
-.splash-cat{font-size:5rem;filter:drop-shadow(0 6px 20px rgba(124,92,255,.6));animation:popin .6s cubic-bezier(.3,1.5,.5,1)}
-.splash-moon{font-size:2.2rem;animation:twinkle 2.4s infinite alternate;margin-top:-10px}
-.splash-name{font-size:1.6rem;font-weight:900;letter-spacing:3px;margin-top:8px}
-.splash-name .m{color:var(--gold)}
+.splash-cat{font-size:5rem;filter:drop-shadow(0 6px 14px rgba(0,0,0,.3));animation:popin .6s cubic-bezier(.3,1.5,.5,1)}
+.splash-moon{font-size:2.2rem;animation:tw 2.4s infinite alternate;margin-top:-10px}
+@keyframes tw{from{transform:scale(1)}to{transform:scale(1.15) rotate(8deg)}}
+.splash-name{font-family:"Press Start 2P",monospace;font-size:1.3rem;color:var(--red);text-shadow:2px 2px 0 #fff,3px 3px 0 #b51410}
+.splash-name .m{color:var(--blue);text-shadow:2px 2px 0 #fff,3px 3px 0 #1d4fb5}
 @keyframes popin{from{transform:scale(.3);opacity:0}to{transform:scale(1);opacity:1}}
 
-/* add to home screen */
-#a2hs{
-  position:fixed;left:0;right:0;top:env(safe-area-inset-top);z-index:300;
-  background:linear-gradient(135deg,var(--neon),#5a3cf0);color:#fff;
-  display:flex;align-items:center;gap:12px;padding:12px 14px;font-size:.85rem;
-  box-shadow:0 4px 14px rgba(0,0,0,.4);animation:slideDown .4s ease;
-}
+/* ===== a2hs ===== */
+#a2hs{position:fixed;left:0;right:0;top:0;z-index:300;background:var(--red);color:#fff;
+  display:flex;align-items:center;gap:12px;padding:12px 14px;font-size:.85rem;font-weight:800;
+  box-shadow:0 4px 14px rgba(0,0,0,.3);animation:slideDown .4s ease}
 @keyframes slideDown{from{transform:translateY(-100%)}to{transform:none}}
-.a2hs-ico{font-size:1.5rem;flex:none}
-.a2hs-txt{flex:1;line-height:1.3}
-.a2hs-txt b{font-weight:900}
-.a2hs-x{background:none;border:none;color:#fff;font-size:1.2rem;cursor:pointer;opacity:.8;flex:none}
+.a2hs-ico{font-size:1.5rem;flex:none}.a2hs-txt{flex:1;line-height:1.3}.a2hs-txt b{font-weight:900}
+.a2hs-x{background:none;border:none;color:#fff;font-size:1.2rem;cursor:pointer;opacity:.85;flex:none}
 
-/* install guide modal */
-#installModal{
-  position:fixed;inset:0;z-index:400;background:rgba(6,8,16,.82);backdrop-filter:blur(8px);
-  display:none;align-items:center;justify-content:center;padding:18px;
-}
+/* ===== install modal ===== */
+#installModal{position:fixed;inset:0;z-index:400;background:rgba(20,12,40,.8);backdrop-filter:blur(6px);
+  display:none;align-items:center;justify-content:center;padding:18px}
 #installModal.show{display:flex;animation:fadeIn .25s ease}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
-.im-card{
-  background:var(--panel);border:1px solid var(--border);border-radius:22px;
-  width:min(440px,100%);max-height:86vh;overflow-y:auto;position:relative;
-  padding:22px 20px 18px;animation:pop .35s cubic-bezier(.3,1.4,.5,1);
-}
-.im-close{position:absolute;top:14px;right:16px;background:none;border:none;color:var(--muted);font-size:1.3rem;cursor:pointer}
-.im-close:hover{color:var(--ink)}
-.im-head{display:flex;gap:14px;align-items:center;margin-bottom:18px;padding-right:24px}
-.im-cat{font-size:2.6rem;filter:drop-shadow(0 3px 10px rgba(124,92,255,.5))}
-.im-title{font-size:1.25rem;font-weight:900}
-.im-sub{font-size:.78rem;color:var(--muted);margin-top:2px;line-height:1.3}
-.im-tabs{display:flex;gap:8px;margin-bottom:18px}
-.im-tab{
-  flex:1;background:var(--surface);border:1px solid var(--border);color:var(--muted);
-  padding:10px;border-radius:12px;cursor:pointer;font-weight:700;font-size:.85rem;transition:all .2s;
-}
-.im-tab.active{background:var(--neon);color:#fff;border-color:var(--neon)}
-.im-step{display:flex;gap:14px;align-items:flex-start;padding:12px 4px;border-bottom:1px solid var(--border)}
+.im-card{background:var(--panel);border:4px solid var(--border);border-radius:22px;width:min(440px,100%);
+  max-height:86vh;overflow-y:auto;position:relative;padding:22px 20px 18px;animation:pop .35s cubic-bezier(.3,1.4,.5,1);box-shadow:0 8px 0 #b98a3e}
+.im-close{position:absolute;top:14px;right:16px;background:var(--red);border:2px solid #b51410;color:#fff;
+  width:30px;height:30px;border-radius:9px;font-size:1rem;cursor:pointer;font-weight:900}
+.im-head{display:flex;gap:14px;align-items:center;margin-bottom:16px;padding-right:30px}
+.im-cat{font-size:2.6rem;filter:drop-shadow(0 3px 8px rgba(0,0,0,.3))}
+.im-title{font-family:"Press Start 2P",monospace;font-size:.85rem;color:var(--red)}
+.im-sub{font-size:.78rem;color:#5a4f7a;font-weight:700;margin-top:4px;line-height:1.3}
+.im-tabs{display:flex;gap:8px;margin-bottom:16px}
+.im-tab{flex:1;background:var(--panel2);border:3px solid var(--border);color:#5a4f7a;padding:10px;border-radius:12px;
+  cursor:pointer;font-weight:800;font-size:.85rem;font-family:inherit;transition:all .2s}
+.im-tab.active{background:var(--red);color:#fff;border-color:#7d0e0b}
+.im-step{display:flex;gap:12px;align-items:flex-start;padding:11px 2px;border-bottom:2px dashed var(--border)}
 .im-step:last-child{border-bottom:none}
-.im-num{
-  flex:none;width:30px;height:30px;border-radius:50%;background:linear-gradient(145deg,var(--gold),#ffb347);
-  color:#4a3200;font-weight:900;display:flex;align-items:center;justify-content:center;font-size:.95rem;
-}
+.im-num{flex:none;width:30px;height:30px;border-radius:8px;background:var(--coin);color:#5a3f00;font-weight:900;
+  display:flex;align-items:center;justify-content:center;font-size:.95rem;font-family:"Press Start 2P",monospace;border:2px solid #b5860a}
 .im-step .im-ico{font-size:1.5rem}
-.im-step .im-text{flex:1;line-height:1.4;font-size:.9rem}
-.im-step .im-text b{color:var(--gold)}
-.im-foot{text-align:center;color:var(--muted);font-size:.75rem;margin-top:14px}
+.im-step .im-text{flex:1;line-height:1.4;font-size:.88rem;font-weight:700}
+.im-step .im-text b{color:var(--red)}
+.im-foot{text-align:center;color:#5a4f7a;font-weight:700;font-size:.75rem;margin-top:12px}
 
+/* ===== toast ===== */
+#toast{position:fixed;left:50%;top:18%;transform:translateX(-50%) translateY(-20px);z-index:500;
+  background:var(--ink);color:#fff;padding:10px 18px;border-radius:14px;font-weight:800;font-size:.9rem;
+  opacity:0;transition:all .3s;pointer-events:none}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+.confetti{position:fixed;top:-14px;font-size:1.3rem;z-index:200;animation:fall linear forwards;pointer-events:none}
+@keyframes fall{to{transform:translateY(105vh) rotate(720deg);opacity:.2}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
 <body>
-<div id="stars"></div>
-<!-- launch splash (native feel) -->
+<div id="ground"></div>
+
 <div id="splash">
   <div class="splash-cat">🐈‍⬛</div>
   <div class="splash-moon">🌙</div>
   <div class="splash-name">MIN<span class="m">UIT</span></div>
 </div>
 
-<!-- Add-to-Home-Screen prompt (iOS only) -->
 <div id="a2hs" style="display:none">
   <div class="a2hs-ico">📲</div>
-  <div class="a2hs-txt">Install MINUIT: tap <b>Share</b> ⤴ then <b>“Add to Home Screen”</b></div>
+  <div class="a2hs-txt" id="a2hsTxt"></div>
   <button class="a2hs-x" onclick="document.getElementById('a2hs').style.display='none';localStorage.setItem('minuit_a2hs','1')">✕</button>
 </div>
-<div id="app">
 
+<div id="app">
   <div id="topbar">
     <div class="logo"><span class="moon">🌙</span>MIN<span class="m">UIT</span></div>
     <div class="spacer"></div>
-    <div class="stat streak">🔥 <span id="stStreak">0</span></div>
-    <div class="stat xp">✦ <span id="stXP">0</span> XP</div>
+    <div class="stat streak"><span>🔥</span><span id="stStreak">0</span></div>
+    <div class="stat coin"><span>🪙</span><span id="stCoin">0</span></div>
+    <button class="langbtn" id="langBtn" onclick="cycleLang()">EN</button>
   </div>
 
-  <!-- ============ PATH ============ -->
   <div id="pathView"></div>
 
-  <!-- ============ LESSON ============ -->
   <div id="lessonView">
     <div class="lessonTop">
       <button class="quit" onclick="quitLesson()">✕</button>
       <div class="lbar"><div class="lfill" id="lfill"></div></div>
-      <div class="lhearts" id="lhearts">💜 5</div>
+      <div class="lhearts" id="lhearts">❤️ 5</div>
     </div>
     <div id="exArea"></div>
   </div>
 
-  <!-- ============ RESULTS ============ -->
   <div id="resultView">
     <div class="resEmoji" id="resEmoji">🐈‍⬛</div>
     <h2 id="resTitle">Leçon terminée !</h2>
     <p id="resSub">The Paris night is yours.</p>
     <div class="resStats">
-      <div class="resBox"><div class="n" style="color:var(--neon)" id="resXP">+0</div><div class="t">XP earned</div></div>
-      <div class="resBox"><div class="n" style="color:var(--green)" id="resAcc">0%</div><div class="t">Accuracy</div></div>
-      <div class="resBox"><div class="n" style="color:var(--gold)" id="resStreak">0</div><div class="t">Day streak</div></div>
+      <div class="resBox"><div class="n" style="color:var(--blue)" id="resXP">+0</div><div class="t" id="lblXP">STARS</div></div>
+      <div class="resBox"><div class="n" style="color:var(--green)" id="resAcc">0%</div><div class="t" id="lblAcc">ACCURACY</div></div>
+      <div class="resBox"><div class="n" style="color:#ff7a00" id="resStreak">0</div><div class="t" id="lblStreak">STREAK</div></div>
     </div>
-    <button class="bigBtn continue" onclick="backToPath()">Continue</button>
+    <button class="bigBtn continue" onclick="backToPath()">CONTINUE</button>
   </div>
 
   <div class="bubble" id="bubble"></div>
   <div class="mascot" id="mascot" onclick="openInstall()" title="How to install">🐈‍⬛</div>
 
-  <!-- ===== Install guide modal ===== -->
   <div id="installModal" onclick="if(event.target===this)closeInstall()">
     <div class="im-card">
       <button class="im-close" onclick="closeInstall()">✕</button>
       <div class="im-head">
         <div class="im-cat">🐈‍⬛</div>
-        <div>
-          <div class="im-title">Install MINUIT</div>
-          <div class="im-sub">Your Paris-night French app — free, offline, no App Store</div>
-        </div>
+        <div><div class="im-title" id="imTitle">Install MINUIT</div>
+        <div class="im-sub" id="imSub"></div></div>
       </div>
       <div class="im-tabs">
-        <button class="im-tab active" onclick="setPlatform('ios',this)">📱 iPhone</button>
-        <button class="im-tab" onclick="setPlatform('android',this)">🤖 Android</button>
+        <button class="im-tab active" id="imTabIos" onclick="setPlatform('ios',this)">📱 iPhone</button>
+        <button class="im-tab" id="imTabAnd" onclick="setPlatform('android',this)">🤖 Android</button>
       </div>
       <div class="im-body" id="imBody"></div>
-      <div class="im-foot">Already installed? Just open it from your home screen. 🌙</div>
+      <div class="im-foot" id="imFoot"></div>
     </div>
   </div>
+
   <div class="checkBar" id="checkBar" style="display:none">
     <div class="checkInner">
       <div class="feedback" id="feedback"></div>
-      <button class="bigBtn" id="checkBtn" disabled onclick="onCheck()">Check</button>
+      <button class="bigBtn" id="checkBtn" disabled onclick="onCheck()">CHECK</button>
     </div>
   </div>
 </div>
+<div id="toast"></div>
 
 <script>
-/* ================= COURSE DATA ================= */
-/* pair: [fr, pron, en]  |  sentence: {fr:"...", en:"..."} for word-bank */
+/* ================= I18N ================= */
+const I18N = {
+  en:{
+    unit:"UNIT", translateToEnglish:"Translate to English", translateToFrench:"Translate to French",
+    whatDoYouHear:"What do you hear?", buildSentence:"Build the sentence",
+    check:"CHECK", cont:"CONTINUE", correct:"Correct!", notQuite:"Not quite",
+    answer:"Answer", youSaid:"You said", lessonComplete:"Lesson complete!", nightYours:"The Paris night is yours.",
+    lblXP:"STARS", lblAcc:"ACCURACY", lblStreak:"STREAK", outHearts:"Out of hearts!", tryAgain:"Out of hearts — but the night is long. Try again!",
+    installTitle:"Install MINUIT", installSub:"Your Paris-night French app — free, offline, no App Store",
+    alreadyInstalled:"Already installed? Just open it from your home screen. 🌙",
+    a2hs:"Install MINUIT: tap Share ⤴ then “Add to Home Screen”",
+    streak:"Day streak", coins:"Stars", langName:"English",
+    mascot:["Minou says: 15 minutes a night keeps the streak alive. 🌙","Say every answer out loud — your mouth learns too!","Tip: 'Je voudrais' + pointing = survival in all of France.","The night is dark and full of verbs. ⚡","Streaks are earned after midnight... or any time, really.","Open the install guide — tap me, then 'Add to Home Screen'. 📲"],
+    ios:[
+      {ico:"🌐",t:"Open <b>minuit</b> in <b>Safari</b> — this guide only works in Safari, not in-app browsers."},
+      {ico:"⤴️",t:"Tap the <b>Share</b> button (square with up-arrow) at the bottom."},
+      {ico:"📲",t:"Scroll the menu and tap <b>“Add to Home Screen”</b>."},
+      {ico:"✏️",t:"Keep the name <b>MINUIT</b> (or rename) and tap <b>Add</b> top-right."},
+      {ico:"🌙",t:"Close Safari. The <b>MINUIT</b> icon is on your home screen — tap to open fullscreen, offline."}],
+    android:[
+      {ico:"🌐",t:"Open <b>minuit</b> in <b>Chrome</b> (or your default browser)."},
+      {ico:"⋮",t:"Tap the <b>⋮ menu</b> (three dots) in the top-right corner."},
+      {ico:"➕",t:"Tap <b>“Install app”</b> or <b>“Add to Home screen”</b>."},
+      {ico:"✔️",t:"Confirm by tapping <b>Install</b> in the popup."},
+      {ico:"🌙",t:"The <b>MINUIT</b> icon is on your home screen — tap to open like a native app, offline."}]
+  },
+  fr:{
+    unit:"UNITÉ", translateToEnglish:"Traduisez en anglais", translateToFrench:"Traduisez en français",
+    whatDoYouHear:"Qu'entendez-vous ?", buildSentence:"Construisez la phrase",
+    check:"VÉRIFIER", cont:"CONTINUER", correct:"Correct !", notQuite:"Pas tout à fait",
+    answer:"Réponse", youSaid:"Vous avez dit", lessonComplete:"Leçon terminée !", nightYours:"La nuit de Paris est à vous.",
+    lblXP:"ÉTOILES", lblAcc:"PRÉCISION", lblStreak:"SÉRIE", outHearts:"Plus de cœurs...", tryAgain:"Plus de cœurs — mais la nuit est longue. Réessayez !",
+    installTitle:"Installer MINUIT", installSub:"Votre appli de français — gratuite, hors ligne, sans App Store",
+    alreadyInstalled:"Déjà installée ? Ouvrez-la depuis l'écran d'accueil. 🌙",
+    a2hs:"Installez MINUIT : tapez Partager ⤴ puis « Ajouter à l'écran d'accueil »",
+    streak:"Série de jours", coins:"Étoiles", langName:"Français",
+    mascot:["Minou dit : 15 minutes par soir garde la série en vie. 🌙","Dites chaque réponse à voix haute — votre bouche apprend aussi !","Astuce : 'Je voudrais' + désigner = survivre en France.","La nuit est sombre et pleine de verbes. ⚡","Les séries se gagnent après minuit... ou n'importe quand.","Ouvrez le guide d'installation — touchez-moi, puis « Ajouter à l'écran d'accueil ». 📲"],
+    ios:[
+      {ico:"🌐",t:"Ouvrez <b>minuit</b> dans <b>Safari</b> — ce guide ne marche que dans Safari."},
+      {ico:"⤴️",t:"Tapez le bouton <b>Partager</b> (carré avec flèche) en bas."},
+      {ico:"📲",t:"Faites défiler et tapez <b>« Ajouter à l'écran d'accueil »</b>."},
+      {ico:"✏️",t:"Gardez le nom <b>MINUIT</b> et tapez <b>Ajouter</b> en haut à droite."},
+      {ico:"🌙",t:"Fermez Safari. L'icône <b>MINUIT</b> est sur l'écran d'accueil — plein écran, hors ligne."}],
+    android:[
+      {ico:"🌐",t:"Ouvrez <b>minuit</b> dans <b>Chrome</b>."},
+      {ico:"⋮",t:"Tapez le <b>menu ⋮</b> (trois points) en haut à droite."},
+      {ico:"➕",t:"Tapez <b>« Installer l'appli »</b> ou <b>« Ajouter à l'écran d'accueil »</b>."},
+      {ico:"✔️",t:"Confirmez en tapant <b>Installer</b>."},
+      {ico:"🌙",t:"L'icône <b>MINUIT</b> est sur l'écran d'accueil — comme une vraie appli, hors ligne."}]
+  },
+  es:{
+    unit:"UNIDAD", translateToEnglish:"Traduce al inglés", translateToFrench:"Traduce al francés",
+    whatDoYouHear:"¿Qué escuchas?", buildSentence:"Arma la frase",
+    check:"COMPROBAR", cont:"CONTINUAR", correct:"¡Correcto!", notQuite:"Casi, pero no",
+    answer:"Respuesta", youSaid:"Dijiste", lessonComplete:"¡Lección completa!", nightYours:"La noche de París es tuya.",
+    lblXP:"ESTRELLAS", lblAcc:"PRECISIÓN", lblStreak:"RACHA", outHearts:"¡Sin vidas!", tryAgain:"Sin vidas — pero la noche es larga. ¡Inténtalo otra vez!",
+    installTitle:"Instalar MINUIT", installSub:"Tu app de francés — gratis, sin conexión, sin App Store",
+    alreadyInstalled:"¿Ya instalada? Ábrela desde tu pantalla de inicio. 🌙",
+    a2hs:"Instala MINUIT: toca Compartir ⤴ y luego «Añadir a pantalla de inicio»",
+    streak:"Racha de días", coins:"Estrellas", langName:"Español",
+    mascot:["Minú dice: 15 minutos cada noche mantiene la racha viva. 🌙","Di cada respuesta en voz alta — tu boca también aprende.","Tip: 'Je voudrais' + señalar = sobrevivir en Francia.","La noche es oscura y está llena de verbos. ⚡","Las rachas se ganan después de medianoche... o cuando sea.","Abre la guía de instalación — tocándome, luego «Añadir a pantalla de inicio». 📲"],
+    ios:[
+      {ico:"🌐",t:"Abre <b>minuit</b> en <b>Safari</b> — esta guía solo funciona en Safari."},
+      {ico:"⤴️",t:"Toca el botón <b>Compartir</b> (cuadrado con flecha) abajo."},
+      {ico:"📲",t:"Desplaza y toca <b>«Añadir a pantalla de inicio»</b>."},
+      {ico:"✏️",t:"Mantén el nombre <b>MINUIT</b> y toca <b>Añadir</b> arriba a la derecha."},
+      {ico:"🌙",t:"Cierra Safari. El icono <b>MINUIT</b> está en tu inicio — a pantalla completa, sin conexión."}],
+    android:[
+      {ico:"🌐",t:"Abre <b>minuit</b> en <b>Chrome</b>."},
+      {ico:"⋮",t:"Toca el <b>menú ⋮</b> (tres puntos) arriba a la derecha."},
+      {ico:"➕",t:"Toca <b>«Instalar app»</b> o <b>«Añadir a pantalla de inicio»</b>."},
+      {ico:"✔️",t:"Confirma tocando <b>Instalar</b>."},
+      {ico:"🌙",t:"El icono <b>MINUIT</b> está en tu inicio — como app nativa, sin conexión."}]
+  }
+};
+const LANGS=['en','fr','es'];
+let LANG=localStorage.getItem('minuit_lang')||'en';
+function t(k){return (I18N[LANG]&&I18N[LANG][k]!=null)?I18N[LANG][k]:I18N.en[k];}
+function meaning(pair){ // translation of the French word into current UI language
+  if(LANG==='es') return (ES_DICT[pair[2]]||pair[2]);
+  return pair[2];
+}
+
+/* Spanish meanings for vocabulary (accurate) */
+const ES_DICT={
+  "Hello":"Hola","Good evening":"Buenas noches","Hi (casual)":"Hola (informal)","Goodbye":"Adiós",
+  "Thank you":"Gracias","You're welcome":"De nada","Please":"Por favor","Excuse me":"Perdón","Sorry":"Lo siento",
+  "Yes":"Sí","No":"No","How's it going?":"¿Qué tal?","My name is...":"Me llamo...","I would like":"Quisiera",
+  "Where's the bathroom?":"¿Dónde está el baño?","The check, please":"La cuenta, por favor","How much is it?":"¿Cuánto cuesta?",
+  "I'm lost":"Estoy perdido","Help!":"¡Socorro!","I don't understand":"No entiendo","Do you speak English?":"¿Habla inglés?",
+  "Slower":"Más despacio","I need help":"Necesito ayuda","a coffee":"un café","some water":"un poco de agua","some wine":"un poco de vino",
+  "a beer":"una cerveza","the menu":"el menú","A table for two":"Una mesa para dos","It's delicious":"Está delicioso",
+  "the bread":"el pan","the cheese":"el queso","I'm hungry":"Tengo hambre","too expensive":"demasiado caro","I'll take it":"Lo tomo",
+  "by card":"con tarjeta","in cash":"en efectivo","the money":"el dinero","I am":"yo soy/estoy","you are":"tú eres/estás",
+  "he is":"él es/está","I have":"yo tengo","you have":"tú tienes","we have":"nosotros tenemos","I go / I'm going":"yo voy",
+  "you go":"tú vas","we go":"nosotros vamos","I do / make":"yo hago","he does":"él hace","Let's go!":"¡Vamos!",
+  "I want":"yo quiero","you want":"tú quieres","I can":"yo puedo","I must":"yo debo","I know":"yo sé","I want to leave":"quiero irme",
+  "to the left":"a la izquierda","to the right":"a la derecha","straight ahead":"derecho","Where is...?":"¿Dónde está...?",
+  "near":"cerca de","far from":"lejos de","the station":"la estación","the hotel":"el hotel","the street":"la calle",
+  "the city":"la ciudad","the metro":"el metro","the night":"la noche","today":"hoy","tomorrow":"mañana","yesterday":"ayer",
+  "now":"ahora","soon":"pronto","What time is it?":"¿Qué hora es?","I ate":"comí","I did":"hice","I saw":"vi","I took":"tomé",
+  "I said":"dije","I had":"tuve","I was":"yo fui/estuve","it was":"era/estaba","the weather was nice":"el tiempo estaba bueno",
+  "I went":"fui","I left":"salí","two years ago":"hace dos años","Yeah":"Sí","So / as a result":"Entonces","Anyway":"En fin",
+  "Totally!":"¡Totalmente!","That's awesome":"Es genial","That sucks":"Es una porquería","Don't worry":"No te preocupes",
+  "That works!":"¡Eso funciona!","a thing":"una cosa","work (slang)":"el curro/trabajo","What's new?":"¿Qué hay de nuevo?","Cheers!":"¡Salud!"
+};
+
+/* ================= COURSE ================= */
 const COURSE=[
  {unit:"Premiers Pas", desc:"Greetings & survival — your first steps into the night",
   lessons:[
@@ -326,14 +407,13 @@ const COURSE=[
     sentences:[{fr:"Bonjour je m'appelle Marie",en:"Hello my name is Marie"},{fr:"Merci beaucoup au revoir",en:"Thank you very much goodbye"}]},
    {icon:"🙏",name:"Politesse",pairs:[
      ["S'il vous plaît","seel voo PLEH","Please"],["Excusez-moi","ex-ku-zay MWAH","Excuse me"],
-     ["Pardon","pahr-DOHN","Sorry"],["Oui","wee","Yes"],["Non","nohn","No"],
-     ["Ça va ?","sah VAH","How's it going?"]],
+     ["Pardon","pahr-DOHN","Sorry"],["Oui","wee","Yes"],["Non","nohn","No"],["Ça va ?","sah VAH","How's it going?"}],
     sentences:[{fr:"Excusez-moi s'il vous plaît",en:"Excuse me please"},{fr:"Oui ça va merci",en:"Yes I'm fine thank you"}]},
    {icon:"🆘",name:"Au secours",pairs:[
      ["Je ne comprends pas","zhuh nuh kohm-PRAHN pah","I don't understand"],
      ["Parlez-vous anglais ?","par-lay voo ahn-GLEH","Do you speak English?"],
      ["Plus lentement","plu lahnt-MAHN","Slower"],["Je suis perdu","zhuh swee pehr-DU","I'm lost"],
-     ["J'ai besoin d'aide","zhay buh-zwehn DED","I need help"],["Au secours !","oh suh-KOOR","Help!"]],
+     ["J'ai besoin d'aide","zhay buh-zwehn DED","I need help"],["Au secours !","oh suh-KOOR","Help!"}],
     sentences:[{fr:"Je ne comprends pas parlez plus lentement",en:"I don't understand speak slower"},{fr:"Je suis perdu j'ai besoin d'aide",en:"I am lost I need help"}]},
   ]},
  {unit:"Café Culture", desc:"Order like a Parisian",
@@ -344,10 +424,9 @@ const COURSE=[
      ["une bière","un BYEHR","a beer"],["le menu","luh muh-NU","the menu"]],
     sentences:[{fr:"Je voudrais un café s'il vous plaît",en:"I would like a coffee please"},{fr:"Je voudrais de l'eau et le menu",en:"I would like some water and the menu"}]},
    {icon:"🥐",name:"La table",pairs:[
-     ["Une table pour deux","un TAHBL poor DUH","A table for two"],
-     ["L'addition","lah-dee-SYOHN","The check"],["C'est délicieux","seh day-lee-SYUH","It's delicious"],
-     ["le pain","luh PEHN","the bread"],["le fromage","luh froh-MAHZH","the cheese"],
-     ["J'ai faim","zhay FEHM","I'm hungry"]],
+     ["Une table pour deux","un TAHBL poor DUH","A table for two"],["L'addition","lah-dee-SYOHN","The check"],
+     ["C'est délicieux","seh day-lee-SYUH","It's delicious"],["le pain","luh PEHN","the bread"],
+     ["le fromage","luh froh-MAHZH","the cheese"],["J'ai faim","zhay FEHM","I'm hungry"]],
     sentences:[{fr:"Une table pour deux s'il vous plaît",en:"A table for two please"},{fr:"C'est délicieux l'addition s'il vous plaît",en:"It's delicious the check please"}]},
    {icon:"💶",name:"Payer",pairs:[
      ["C'est combien ?","seh kohm-BYEHN","How much is it?"],["trop cher","troh SHEHR","too expensive"],
@@ -358,119 +437,91 @@ const COURSE=[
  {unit:"Verbes de Minuit", desc:"The power verbs that unlock 70% of speech",
   lessons:[
    {icon:"⚡",name:"Être & Avoir",pairs:[
-     ["je suis","zhuh SWEE","I am"],["tu es","tu EH","you are"],
-     ["il est","eel EH","he is"],["j'ai","zhay","I have"],
-     ["tu as","tu AH","you have"],["nous avons","noo zah-VOHN","we have"]],
+     ["je suis","zhuh SWEE","I am"],["tu es","tu EH","you are"],["il est","eel EH","he is"],
+     ["j'ai","zhay","I have"],["tu as","tu AH","you have"],["nous avons","noo zah-VOHN","we have"]],
     sentences:[{fr:"Je suis fatigué et j'ai faim",en:"I am tired and I am hungry"},{fr:"Tu es mon ami",en:"You are my friend"}]},
    {icon:"🚀",name:"Aller & Faire",pairs:[
-     ["je vais","zhuh VEH","I go / I'm going"],["tu vas","tu VAH","you go"],
-     ["nous allons","noo zah-LOHN","we go"],["je fais","zhuh FEH","I do / make"],
-     ["il fait","eel FEH","he does"],["On y va !","ohn ee VAH","Let's go!"]],
+     ["je vais","zhuh VEH","I go / I'm going"],["tu vas","tu VAH","you go"],["nous allons","noo zah-LOHN","we go"],
+     ["je fais","zhuh FEH","I do / make"],["il fait","eel FEH","he does"],["On y va !","ohn ee VAH","Let's go!"}],
     sentences:[{fr:"Je vais au café ce soir",en:"I am going to the cafe tonight"},{fr:"Qu'est-ce que tu fais",en:"What are you doing"}]},
    {icon:"💪",name:"Vouloir & Pouvoir",pairs:[
-     ["je veux","zhuh VUH","I want"],["tu veux","tu VUH","you want"],
-     ["je peux","zhuh PUH","I can"],["je dois","zhuh DWAH","I must"],
-     ["je sais","zhuh SEH","I know"],["Je veux partir","zhuh vuh par-TEER","I want to leave"]],
+     ["je veux","zhuh VUH","I want"],["tu veux","tu VUH","you want"],["je peux","zhuh PUH","I can"],
+     ["je dois","zhuh DWAH","I must"],["je sais","zhuh SEH","I know"],["Je veux partir","zhuh vuh par-TEER","I want to leave"]],
     sentences:[{fr:"Je veux aller à Paris",en:"I want to go to Paris"},{fr:"Je peux parler français",en:"I can speak French"}]},
   ]},
  {unit:"La Rue", desc:"Navigate the city after dark",
   lessons:[
    {icon:"🧭",name:"Directions",pairs:[
-     ["à gauche","ah GOHSH","to the left"],["à droite","ah DRWAHT","to the right"],
-     ["tout droit","too DRWAH","straight ahead"],["Où est... ?","oo EH","Where is...?"],
-     ["près de","preh DUH","near"],["loin de","lwehn DUH","far from"]],
+     ["à gauche","ah GOHSH","to the left"],["à droite","ah DRWAHT","to the right"],["tout droit","too DRWAH","straight ahead"],
+     ["Où est... ?","oo EH","Where is...?"],["près de","preh DUH","near"],["loin de","lwehn DUH","far from"]],
     sentences:[{fr:"Où est la gare s'il vous plaît",en:"Where is the station please"},{fr:"Tout droit puis à gauche",en:"Straight ahead then to the left"}]},
    {icon:"🏙️",name:"La ville",pairs:[
-     ["la gare","lah GAHR","the station"],["l'hôtel","loh-TELL","the hotel"],
-     ["la rue","lah RU","the street"],["la ville","lah VEEL","the city"],
-     ["le métro","luh may-TROH","the metro"],["la nuit","lah NWEE","the night"]],
+     ["la gare","lah GAHR","the station"],["l'hôtel","loh-TELL","the hotel"],["la rue","lah RU","the street"],
+     ["la ville","lah VEEL","the city"],["le métro","luh may-TROH","the metro"],["la nuit","lah NWEE","the night"]],
     sentences:[{fr:"L'hôtel est près de la gare",en:"The hotel is near the station"},{fr:"La ville est belle la nuit",en:"The city is beautiful at night"}]},
    {icon:"🕐",name:"Le temps",pairs:[
-     ["aujourd'hui","oh-zhoor-DWEE","today"],["demain","duh-MEHN","tomorrow"],
-     ["hier","yehr","yesterday"],["maintenant","mehnt-NAHN","now"],
-     ["bientôt","byehn-TOH","soon"],["Quelle heure est-il ?","kel UHR eh-teel","What time is it?"]],
+     ["aujourd'hui","oh-zhoor-DWEE","today"],["demain","duh-MEHN","tomorrow"],["hier","yehr","yesterday"],
+     ["maintenant","mehnt-NAHN","now"],["bientôt","byehn-TOH","soon"],["Quelle heure est-il ?","kel UHR eh-teel","What time is it?"}],
     sentences:[{fr:"On y va maintenant ou demain",en:"Do we go now or tomorrow"},{fr:"Quelle heure est-il maintenant",en:"What time is it now"}]},
   ]},
  {unit:"Le Passé", desc:"Tell stories — past tense unlocked",
   lessons:[
    {icon:"📸",name:"J'ai fait",pairs:[
-     ["j'ai mangé","zhay mahn-ZHAY","I ate"],["j'ai fait","zhay FEH","I did"],
-     ["j'ai vu","zhay VU","I saw"],["j'ai pris","zhay PREE","I took"],
-     ["j'ai dit","zhay DEE","I said"],["j'ai eu","zhay U","I had"]],
+     ["j'ai mangé","zhay mahn-ZHAY","I ate"],["j'ai fait","zhay FEH","I did"],["j'ai vu","zhay VU","I saw"],
+     ["j'ai pris","zhay PREE","I took"],["j'ai dit","zhay DEE","I said"],["j'ai eu","zhay U","I had"]],
     sentences:[{fr:"J'ai mangé au café hier",en:"I ate at the cafe yesterday"},{fr:"J'ai vu la ville la nuit",en:"I saw the city at night"}]},
    {icon:"🎥",name:"J'étais",pairs:[
-     ["j'étais","zhay-TEH","I was"],["c'était","say-TEH","it was"],
-     ["il faisait beau","eel fuh-zeh BOH","the weather was nice"],
-     ["je suis allé","zhuh swee zah-LAY","I went"],["je suis parti","zhuh swee par-TEE","I left"],
-     ["il y a deux ans","eel ee ah duh ZAHN","two years ago"]],
+     ["j'étais","zhay-TEH","I was"],["c'était","say-TEH","it was"],["il faisait beau","eel fuh-zeh BOH","the weather was nice"],
+     ["je suis allé","zhuh swee zah-LAY","I went"],["je suis parti","zhuh swee par-TEE","I left"],["il y a deux ans","eel ee ah duh ZAHN","two years ago"]],
     sentences:[{fr:"Je suis allé à Paris il y a deux ans",en:"I went to Paris two years ago"},{fr:"C'était délicieux",en:"It was delicious"}]},
   ]},
  {unit:"Argot de Nuit", desc:"Street French — talk like a local",
   lessons:[
    {icon:"😎",name:"Le vrai parler",pairs:[
-     ["Ouais","weh","Yeah"],["Du coup","du KOO","So / as a result"],
-     ["Bref","brehf","Anyway"],["Carrément !","kah-ray-MAHN","Totally!"],
-     ["C'est génial","seh zhay-NYAL","That's awesome"],["C'est nul","seh NUL","That sucks"]],
+     ["Ouais","weh","Yeah"],["Du coup","du KOO","So / as a result"],["Bref","brehf","Anyway"],
+     ["Carrément !","kah-ray-MAHN","Totally!"],["C'est génial","seh zhay-NYAL","That's awesome"],["C'est nul","seh NUL","That sucks"]],
     sentences:[{fr:"Du coup on y va ce soir",en:"So we go tonight"},{fr:"Ouais c'est génial",en:"Yeah that's awesome"}]},
    {icon:"🤙",name:"Entre potes",pairs:[
-     ["T'inquiète","tehn-KYET","Don't worry"],["Ça marche !","sah MARSH","That works!"],
-     ["un truc","uhn TRUK","a thing"],["le boulot","luh boo-LOH","work (slang)"],
-     ["Quoi de neuf ?","kwah duh NUHF","What's new?"],["Santé !","sahn-TAY","Cheers!"]],
+     ["T'inquiète","tehn-KYET","Don't worry"],["Ça marche !","sah MARSH","That works!"],["un truc","uhn TRUK","a thing"],
+     ["le boulot","luh boo-LOH","work (slang)"],["Quoi de neuf ?","kwah duh NUHF","What's new?"],["Santé !","sahn-TAY","Cheers!"}],
     sentences:[{fr:"Quoi de neuf au boulot",en:"What's new at work"},{fr:"T'inquiète ça marche",en:"Don't worry that works"}]},
   ]},
 ];
 
 /* ================= STATE ================= */
-const S = JSON.parse(localStorage.getItem('minuit')||'{}');
-S.xp=S.xp||0; S.done=S.done||{}; S.streak=S.streak||0; S.lastDay=S.lastDay||null;
+const S=JSON.parse(localStorage.getItem('minuit')||'{}');
+S.coin=S.coin||0; S.done=S.done||{}; S.streak=S.streak||0; S.lastDay=S.lastDay||null;
 function save(){localStorage.setItem('minuit',JSON.stringify(S))}
 function today(){return new Date().toISOString().slice(0,10)}
-function bumpStreak(){
-  const t=today();
-  if(S.lastDay===t)return;
-  const y=new Date(Date.now()-864e5).toISOString().slice(0,10);
-  S.streak=(S.lastDay===y)?S.streak+1:1; S.lastDay=t; save();
-}
-function refreshStats(){
-  document.getElementById('stXP').textContent=S.xp;
-  document.getElementById('stStreak').textContent=S.streak;
-}
+function bumpStreak(){const tn=today();if(S.lastDay===tn)return;
+  const y=new Date(Date.now()-864e5).toISOString().slice(0,10);S.streak=(S.lastDay===y)?S.streak+1:1;S.lastDay=tn;save();}
+function refreshStats(){document.getElementById('stCoin').textContent=S.coin;document.getElementById('stStreak').textContent=S.streak;}
 
 /* ================= SPEECH ================= */
 let frVoice=null;
 function pickVoice(){const v=speechSynthesis.getVoices().filter(x=>x.lang.startsWith('fr'));
   frVoice=v.find(x=>/Thomas|Amélie|Audrey|Google/i.test(x.name))||v[0]||null;}
-speechSynthesis.onvoiceschanged=pickVoice; pickVoice();
-function speak(t){speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t.replace(/[?!]/g,''));
+speechSynthesis.onvoiceschanged=pickVoice;pickVoice();
+function speak(tt){speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(tt.replace(/[?!]/g,''));
   u.lang='fr-FR';if(frVoice)u.voice=frVoice;u.rate=.85;speechSynthesis.speak(u);}
 
-/* ================= STARS ================= */
-(()=>{const s=document.getElementById('stars');
-for(let i=0;i<70;i++){const d=document.createElement('div');d.className='star';
-d.style.cssText=`left:${Math.random()*100}vw;top:${Math.random()*100}vh;width:${1+Math.random()*2}px;height:${1+Math.random()*2}px;animation-delay:${Math.random()*3}s`;
-s.appendChild(d);}})();
-
-/* ================= PATH RENDER ================= */
+/* ================= PATH ================= */
 const pathView=document.getElementById('pathView');
 function lessonKey(u,l){return u+'_'+l}
 function renderPath(){
   pathView.innerHTML='';
   let nextFound=false;
   COURSE.forEach((unit,ui)=>{
-    const h=document.createElement('h2');h.className='unit';h.textContent=`✶ ${unit.unit}`;
+    const h=document.createElement('h2');h.className='unit';h.textContent='✶ '+t('unit')+' '+unit.unit;
     const d=document.createElement('p');d.className='unitDesc';d.textContent=unit.desc;
     const path=document.createElement('div');path.className='path';
     unit.lessons.forEach((les,li)=>{
-      const key=lessonKey(ui,li);
-      const done=!!S.done[key];
-      const n=document.createElement('div');
+      const key=lessonKey(ui,li);const done=!!S.done[key];const n=document.createElement('div');
       let cls='node';
-      if(done)cls+=' done';
-      else if(!nextFound){cls+=' next';nextFound=true;}
-      else cls+=' locked';
+      if(done)cls+=' done';else if(!nextFound){cls+=' next';nextFound=true;}else cls+=' locked';
       n.className=cls;
-      n.innerHTML=`${les.icon}<span class="label">${les.name}</span>${done?'<span class="crown">👑</span>':''}`;
-      if(!n.classList.contains('locked')) n.onclick=()=>startLesson(ui,li);
+      n.innerHTML=`<span class="q">?</span><span class="label">${les.name}</span>${done?'<span class="crown">👑</span>':''}`;
+      if(!n.classList.contains('locked'))n.onclick=()=>startLesson(ui,li);
       path.appendChild(n);
     });
     pathView.append(h,d,path);
@@ -478,29 +529,24 @@ function renderPath(){
   refreshStats();
 }
 
-/* ================= EXERCISE GEN ================= */
-function shuffle(a){return a.map(x=>[Math.random(),x]).sort((p,q)=>p[0]-q[0]).map(p=>p[1])}
+/* ================= EXERCISES ================= */
+function shuffle(a){return a.map(x=>[Math.random(),x]).sort((p,q)=>p[0]-q[1]).map(p=>p[1])}
 const ALLPAIRS=COURSE.flatMap(u=>u.lessons.flatMap(l=>l.pairs));
 function distractors(correct,n,field){
   const out=[];const pool=shuffle(ALLPAIRS);
-  for(const p of pool){const v=field===2?p[2]:p[0];
-    if(v!==correct&&!out.includes(v)){out.push(v);if(out.length===n)break;}}
+  for(const p of pool){const v=field===2?p[2]:p[0];if(v!==correct&&!out.includes(v)){out.push(v);if(out.length===n)break;}}
   return out;
 }
 function buildExercises(les){
-  const ex=[];
-  shuffle(les.pairs).forEach((p,i)=>{
-    const t=i%3;
-    if(t===0)ex.push({type:'fr2en',pair:p});
-    else if(t===1)ex.push({type:'listen',pair:p});
-    else ex.push({type:'en2fr',pair:p});
+  const ex=[];shuffle(les.pairs).forEach((p,i)=>{
+    const ty=i%3;if(ty===0)ex.push({type:'fr2en',pair:p});else if(ty===1)ex.push({type:'listen',pair:p});else ex.push({type:'en2fr',pair:p});
   });
   les.sentences.forEach(s=>ex.push({type:'bank',s}));
   return shuffle(ex).slice(0,9);
 }
 
 /* ================= LESSON FLOW ================= */
-let L=null; // live lesson state
+let L=null;
 function startLesson(ui,li){
   const les=COURSE[ui].lessons[li];
   L={ui,li,ex:buildExercises(les),i:0,hearts:5,right:0,wrong:0,answered:false,sel:null,bankSel:[]};
@@ -511,47 +557,34 @@ function startLesson(ui,li){
   document.getElementById('mascot').style.display='none';
   renderEx();
 }
-function quitLesson(){
-  document.getElementById('lessonView').style.display='none';
-  document.getElementById('checkBar').style.display='none';
-  document.getElementById('pathView').style.display='block';
-  document.getElementById('mascot').style.display='block';
-  speechSynthesis.cancel();
-}
+function quitLesson(){document.getElementById('lessonView').style.display='none';document.getElementById('checkBar').style.display='none';
+  document.getElementById('pathView').style.display='block';document.getElementById('mascot').style.display='block';speechSynthesis.cancel();}
 function backToPath(){quitLesson();document.getElementById('resultView').style.display='none';renderPath();}
 
 function renderEx(){
   const e=L.ex[L.i];const area=document.getElementById('exArea');
   L.answered=false;L.sel=null;L.bankSel=[];
   document.getElementById('lfill').style.width=(L.i/L.ex.length*100)+'%';
-  document.getElementById('lhearts').textContent='💜 '+L.hearts;
+  document.getElementById('lhearts').textContent='❤️ '+L.hearts;
   const fb=document.getElementById('feedback');fb.className='feedback';fb.innerHTML='';
-  const btn=document.getElementById('checkBtn');btn.textContent='Check';btn.disabled=true;btn.classList.remove('continue');
-
+  const btn=document.getElementById('checkBtn');btn.textContent=t('check');btn.disabled=true;btn.classList.remove('continue');
   let html='';
   if(e.type==='fr2en'){
-    html=`<div class="exType">Translate to English</div>
+    html=`<div class="exType">${t('translateToEnglish')}</div>
       <div class="prompt">${e.pair[0]} <button class="hearBtn" onclick="speak('${esc(e.pair[0])}')">🔊</button></div>
       <div class="pron">${e.pair[1]}</div><div class="opts" id="opts"></div>`;
-    area.innerHTML=html; renderOpts(shuffle([e.pair[2],...distractors(e.pair[2],3,2)]),e.pair[2]);
-    speak(e.pair[0]);
-  }
-  else if(e.type==='en2fr'){
-    html=`<div class="exType">Translate to French</div>
-      <div class="prompt">${e.pair[2]}</div><div class="opts" id="opts"></div>`;
-    area.innerHTML=html; renderOpts(shuffle([e.pair[0],...distractors(e.pair[0],3,0)]),e.pair[0],true);
-  }
-  else if(e.type==='listen'){
-    html=`<div class="exType">What do you hear?</div>
-      <div class="prompt"><button class="hearBtn" style="width:72px;height:72px;font-size:1.8rem" onclick="speak('${esc(e.pair[0])}')">🔊</button> Tap to listen</div>
+    area.innerHTML=html;renderOpts(shuffle([meaning(e.pair),...distractors(e.pair[2],3,2)]),e.pair[2],false);speak(e.pair[0]);
+  }else if(e.type==='en2fr'){
+    html=`<div class="exType">${t('translateToFrench')}</div><div class="prompt">${meaning(e.pair)}</div><div class="opts" id="opts"></div>`;
+    area.innerHTML=html;renderOpts(shuffle([e.pair[0],...distractors(e.pair[0],3,0)]),e.pair[0],true);
+  }else if(e.type==='listen'){
+    html=`<div class="exType">${t('whatDoYouHear')}</div>
+      <div class="prompt"><button class="hearBtn" style="width:72px;height:72px;font-size:1.8rem" onclick="speak('${esc(e.pair[0])}')">🔊</button> ${t('whatDoYouHear')}</div>
       <div class="opts" id="opts"></div>`;
-    area.innerHTML=html; renderOpts(shuffle([e.pair[0],...distractors(e.pair[0],3,0)]),e.pair[0],true);
-    speak(e.pair[0]);
-  }
-  else if(e.type==='bank'){
+    area.innerHTML=html;renderOpts(shuffle([e.pair[0],...distractors(e.pair[0],3,0)]),e.pair[0],true);speak(e.pair[0]);
+  }else if(e.type==='bank'){
     const words=shuffle(e.s.fr.split(' '));
-    html=`<div class="exType">Build the sentence</div>
-      <div class="prompt">"${e.s.en}"</div>
+    html=`<div class="exType">${t('buildSentence')}</div><div class="prompt">“${e.s.en}”</div>
       <div class="answerZone" id="azone"></div>
       <div class="bank" id="bank">${words.map((w,i)=>`<button class="chip" data-w="${esc(w)}" data-i="${i}" onclick="pickChip(this)">${w}</button>`).join('')}</div>`;
     area.innerHTML=html;
@@ -563,177 +596,128 @@ function renderOpts(opts,correct,speakOnPick){
   opts.forEach((o,i)=>{
     const b=document.createElement('button');b.className='opt';
     b.innerHTML=`<span class="key">${i+1}</span> ${o}`;b.dataset.v=o;
-    b.onclick=()=>{
-      if(L.answered)return;
-      box.querySelectorAll('.opt').forEach(x=>x.classList.remove('sel'));
-      b.classList.add('sel');L.sel=o;
-      if(speakOnPick)speak(o);
-      document.getElementById('checkBtn').disabled=false;
-    };
+    b.onclick=()=>{if(L.answered)return;box.querySelectorAll('.opt').forEach(x=>x.classList.remove('sel'));
+      b.classList.add('sel');L.sel=o;if(speakOnPick)speak(o);document.getElementById('checkBtn').disabled=false;};
     box.appendChild(b);
   });
   L.correct=correct;
 }
 function pickChip(btn){
-  if(L.answered)return;
-  const az=document.getElementById('azone');
-  if(btn.parentElement.id==='bank'){
-    btn.classList.add('used');
-    const c=document.createElement('button');c.className='chip';c.textContent=btn.dataset.w;
-    c.dataset.src=btn.dataset.i;
-    c.onclick=()=>{if(L.answered)return;
-      document.querySelector(`#bank .chip[data-i="${c.dataset.src}"]`).classList.remove('used');
-      c.remove();updateBankState();};
-    az.appendChild(c);
-  }
-  updateBankState();
+  if(L.answered)return;const az=document.getElementById('azone');
+  if(btn.parentElement.id==='bank'){btn.classList.add('used');
+    const c=document.createElement('button');c.className='chip';c.textContent=btn.dataset.w;c.dataset.src=btn.dataset.i;
+    c.onclick=()=>{if(L.answered)return;document.querySelector(`#bank .chip[data-i="${c.dataset.src}"]`).classList.remove('used');c.remove();updateBankState();};
+    az.appendChild(c);}updateBankState();
 }
-function updateBankState(){
-  const az=document.getElementById('azone');
-  document.getElementById('checkBtn').disabled=az.children.length===0;
-}
+function updateBankState(){const az=document.getElementById('azone');document.getElementById('checkBtn').disabled=az.children.length===0;}
 
 function onCheck(){
   const btn=document.getElementById('checkBtn');
-  if(L.answered){ // continue
-    L.i++;
-    if(L.hearts<=0){failLesson();return;}
-    if(L.i>=L.ex.length){finishLesson();return;}
-    renderEx();return;
-  }
-  const e=L.ex[L.i];let ok=false,answer='';
+  if(L.answered){L.i++;if(L.hearts<=0){failLesson();return;}if(L.i>=L.ex.length){finishLesson();return;}renderEx();return;}
+  const e=L.ex[L.i];let ok=false,ansFr='',ansMean='';
   if(e.type==='bank'){
     const got=[...document.getElementById('azone').children].map(c=>c.textContent).join(' ');
-    ok=got.toLowerCase()===e.s.fr.toLowerCase();answer=e.s.fr;
+    ok=got.toLowerCase()===e.s.fr.toLowerCase();ansFr=e.s.fr;ansMean=e.s.en;
+    document.querySelectorAll('#opts .opt').forEach(x=>{});
   }else{
-    ok=L.sel===L.correct;answer=L.correct;
-    document.querySelectorAll('#opts .opt').forEach(x=>{
-      if(x.dataset.v===L.correct)x.classList.add('right');
-      else if(x.dataset.v===L.sel&&!ok)x.classList.add('wrong');
-    });
+    ok=L.sel===L.correct;ansFr=e.pair[0];ansMean=meaning(e.pair);
+    document.querySelectorAll('#opts .opt').forEach(x=>{if(x.dataset.v===L.correct)x.classList.add('right');else if(x.dataset.v===L.sel&&!ok)x.classList.add('wrong');});
   }
   L.answered=true;
   const fb=document.getElementById('feedback');
-  if(ok){L.right++;fb.className='feedback good';fb.innerHTML='✓ Excellent !';playTone(true);}
+  if(ok){L.right++;fb.className='feedback good';
+    fb.innerHTML=`✓ ${t('correct')}<br><b>${ansFr}</b> = ${ansMean}`;coinSound();}
   else{L.wrong++;L.hearts--;fb.className='feedback bad';
-    fb.innerHTML=`✗ Pas tout à fait<small>Answer: ${answer}</small>`;playTone(false);
-    document.getElementById('lhearts').textContent='💜 '+L.hearts;}
-  btn.textContent='Continue';btn.classList.add('continue');btn.disabled=false;
+    fb.innerHTML=`✗ ${t('notQuite')}<br>${t('youSaid')} "${L.sel||'—'}"<br><small>${t('answer')}: <b>${ansFr}</b> = ${ansMean}</small>`;downSound();
+    document.getElementById('lhearts').textContent='❤️ '+L.hearts;}
+  btn.textContent=t('cont');btn.classList.add('continue');btn.disabled=false;
 }
-function playTone(good){
-  try{const ctx=playTone.ctx||(playTone.ctx=new (window.AudioContext||window.webkitAudioContext)());
-  const o=ctx.createOscillator(),g=ctx.createGain();o.connect(g);g.connect(ctx.destination);
-  o.frequency.value=good?880:220;o.type='sine';g.gain.setValueAtTime(.12,ctx.currentTime);
-  g.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+.3);o.start();o.stop(ctx.currentTime+.3);
-  if(good){const o2=ctx.createOscillator(),g2=ctx.createGain();o2.connect(g2);g2.connect(ctx.destination);
-  o2.frequency.value=1320;g2.gain.setValueAtTime(.1,ctx.currentTime+.1);
-  g2.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+.4);o2.start(ctx.currentTime+.1);o2.stop(ctx.currentTime+.4);}}catch(e){}
-}
+function coinSound(){try{const ctx=coinSound.ctx||(coinSound.ctx=new(window.AudioContext||window.webkitAudioContext)());
+  [{f:988,t:0},{f:1319,t:.09}].forEach(({f,t})=>{const o=ctx.createOscillator(),g=ctx.createGain();o.connect(g);g.connect(ctx.destination);
+  o.frequency.value=f;o.type='square';g.gain.setValueAtTime(.0001,ctx.currentTime+t);g.gain.exponentialRampToValueAtTime(.14,ctx.currentTime+t+.01);
+  g.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+t+.18);o.start(ctx.currentTime+t);o.stop(ctx.currentTime+t+.2);});}catch(e){}}
+function downSound(){try{const ctx=downSound.ctx||(downSound.ctx=new(window.AudioContext||window.webkitAudioContext)());
+  [{f:392,t:0},{f:262,t:.12}].forEach(({f,t})=>{const o=ctx.createOscillator(),g=ctx.createGain();o.connect(g);g.connect(ctx.destination);
+  o.frequency.value=f;o.type='square';g.gain.setValueAtTime(.12,ctx.currentTime+t);g.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+t+.22);
+  o.start(ctx.currentTime+t);o.stop(ctx.currentTime+t+.24);});}catch(e){}}
 function finishLesson(){
-  const key=lessonKey(L.ui,L.li);
-  const firstTime=!S.done[key];
+  const key=lessonKey(L.ui,L.li);const firstTime=!S.done[key];
   const gained=(firstTime?20:10)+L.right*2;
-  S.done[key]=true;S.xp+=gained;bumpStreak();save();
-  document.getElementById('lessonView').style.display='none';
-  document.getElementById('checkBar').style.display='none';
+  S.done[key]=true;S.coin+=gained;bumpStreak();save();
+  document.getElementById('lessonView').style.display='none';document.getElementById('checkBar').style.display='none';
   document.getElementById('resultView').style.display='block';
   document.getElementById('resEmoji').textContent='🐈‍⬛';
-  document.getElementById('resTitle').textContent='Leçon terminée !';
-  document.getElementById('resSub').textContent='The Paris night is yours.';
+  document.getElementById('resTitle').textContent=t('lessonComplete');
+  document.getElementById('resSub').textContent=t('nightYours');
   document.getElementById('resXP').textContent='+'+gained;
+  document.getElementById('lblXP').textContent=t('lblXP');
+  document.getElementById('lblAcc').textContent=t('lblAcc');
+  document.getElementById('lblStreak').textContent=t('lblStreak');
   const acc=Math.round(L.right/(L.right+L.wrong||1)*100);
   document.getElementById('resAcc').textContent=acc+'%';
   document.getElementById('resStreak').textContent=S.streak;
   refreshStats();confetti();
 }
 function failLesson(){
-  document.getElementById('lessonView').style.display='none';
-  document.getElementById('checkBar').style.display='none';
+  document.getElementById('lessonView').style.display='none';document.getElementById('checkBar').style.display='none';
   document.getElementById('resultView').style.display='block';
   document.getElementById('resEmoji').textContent='😿';
-  document.getElementById('resTitle').textContent='Plus de cœurs...';
-  document.getElementById('resSub').textContent='Out of hearts — but the night is long. Try again!';
+  document.getElementById('resTitle').textContent=t('outHearts');
+  document.getElementById('resSub').textContent=t('tryAgain');
+  document.getElementById('lblXP').textContent=t('lblXP');document.getElementById('lblAcc').textContent=t('lblAcc');document.getElementById('lblStreak').textContent=t('lblStreak');
   document.getElementById('resXP').textContent='+0';
   const acc=Math.round(L.right/(L.right+L.wrong||1)*100);
-  document.getElementById('resAcc').textContent=acc+'%';
-  document.getElementById('resStreak').textContent=S.streak;
+  document.getElementById('resAcc').textContent=acc+'%';document.getElementById('resStreak').textContent=S.streak;
 }
-function confetti(){
-  const emo=['🌙','⭐','✨','🥖','🐈‍⬛','🗼'];
-  for(let i=0;i<28;i++){const e=document.createElement('div');e.className='confetti';
-  e.textContent=emo[Math.floor(Math.random()*emo.length)];
-  e.style.left=Math.random()*100+'vw';e.style.animationDuration=(1.5+Math.random()*2)+'s';
-  document.body.appendChild(e);setTimeout(()=>e.remove(),3800);}
-}
+function confetti(){const emo=['🌙','⭐','🪙','🍄','🌟','🗼'];
+  for(let i=0;i<28;i++){const e=document.createElement('div');e.className='confetti';e.textContent=emo[Math.floor(Math.random()*emo.length)];
+  e.style.left=Math.random()*100+'vw';e.style.animationDuration=(1.5+Math.random()*2)+'s';document.body.appendChild(e);setTimeout(()=>e.remove(),3800);}}
 
-/* ================= MASCOT ================= */
-const LINES=[
-  "Minou says: 15 minutes a night keeps the streak alive. 🌙",
-  "Miaou ! Say every answer out loud — your mouth learns too.",
-  "Tip: 'Je voudrais' + pointing = survival in all of France.",
-  "The night is dark and full of verbs. ⚡",
-  "Streaks are earned after midnight... or any time, really.",
-  "Perdu ? Open the install guide — tap me, then 'Add to Home Screen'. 📲"
-];
-function mascotTalk(){
-  const b=document.getElementById('bubble');
-  b.textContent=LINES[Math.floor(Math.random()*LINES.length)];
-  b.classList.add('show');clearTimeout(mascotTalk.t);
-  mascotTalk.t=setTimeout(()=>b.classList.remove('show'),4200);
-}
-
-/* ================= INSTALL GUIDE ================= */
-const INSTALL={
-  ios:[
-    {ico:"🌐",text:"Open <b>minuit</b> in <b>Safari</b> — this guide only works in Safari, not in-app browsers."},
-    {ico:"⤴️",text:"Tap the <b>Share</b> button (the square with an up-arrow) at the bottom of the screen."},
-    {ico:"📲",text:"Scroll the menu and tap <b>“Add to Home Screen”</b>."},
-    {ico:"✏️",text:"Keep the name <b>MINUIT</b> (or rename it) and tap <b>Add</b> top-right."},
-    {ico:"🌙",text:"Close Safari. The <b>MINUIT</b> icon is now on your home screen — tap it to open fullscreen, offline."},
-  ],
-  android:[
-    {ico:"🌐",text:"Open <b>minuit</b> in <b>Chrome</b> (or your default browser)."},
-    {ico:"⋮",text:"Tap the <b>⋮ menu</b> (three dots) in the top-right corner."},
-    {ico:"➕",text:"Tap <b>“Install app”</b> or <b>“Add to Home screen”</b>."},
-    {ico:"✔️",text:"Confirm by tapping <b>Install</b> in the popup."},
-    {ico:"🌙",text:"The <b>MINUIT</b> icon appears on your home screen — tap to open like a native app, works offline."},
-  ]
-};
-function openInstall(){document.getElementById('installModal').classList.add('show');setPlatform('ios',document.querySelector('.im-tab'));}
+/* ================= MASCOT / INSTALL ================= */
+function mascotTalk(){const b=document.getElementById('bubble');b.textContent=t('mascot')[Math.floor(Math.random()*t('mascot').length)];
+  b.classList.add('show');clearTimeout(mascotTalk.t);mascotTalk.t=setTimeout(()=>b.classList.remove('show'),4200);}
+const INSTALL={ios:I18N[LANG].ios,android:I18N[LANG].android};
+function openInstall(){document.getElementById('installModal').classList.add('show');applyInstallLang();}
 function closeInstall(){document.getElementById('installModal').classList.remove('show');}
-function setPlatform(p,tab){
-  document.querySelectorAll('.im-tab').forEach(t=>t.classList.remove('active'));
-  if(tab)tab.classList.add('active');
-  document.getElementById('imBody').innerHTML=INSTALL[p].map((s,i)=>
-    `<div class="im-step"><div class="im-num">${i+1}</div><div class="im-ico">${s.ico}</div><div class="im-text">${s.text}</div></div>`
-  ).join('');
-}
+function setPlatform(p,tab){document.querySelectorAll('.im-tab').forEach(t=>t.classList.remove('active'));if(tab)tab.classList.add('active');
+  document.getElementById('imBody').innerHTML=I18N[LANG][p].map((s,i)=>
+    `<div class="im-step"><div class="im-num">${i+1}</div><div class="im-ico">${s.ico}</div><div class="im-text">${s.t}</div></div>`).join('');}
+function applyInstallLang(){document.getElementById('imTitle').textContent=t('installTitle');document.getElementById('imSub').textContent=t('installSub');
+  document.getElementById('imFoot').textContent=t('alreadyInstalled');setPlatform('ios',document.getElementById('imTabIos'));}
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeInstall();});
 
-/* keyboard: 1-4 select option, Enter = check */
+/* ================= LANGUAGE SWITCHER ================= */
+function cycleLang(){const i=LANGS.indexOf(LANG);LANG=LANGS[(i+1)%LANGS.length];localStorage.setItem('minuit_lang',LANG);
+  document.getElementById('langBtn').textContent=LANG.toUpperCase();
+  toast('🌐 '+t('langName'));
+  document.getElementById('a2hsTxt').textContent=t('a2hs');
+  renderPath();
+  if(document.getElementById('lessonView').style.display==='block')renderEx();
+  if(document.getElementById('installModal').classList.contains('show'))applyInstallLang();
+}
+function toast(msg){const el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');
+  clearTimeout(toast.t);toast.t=setTimeout(()=>el.classList.remove('show'),1600);}
+
+/* ================= SPLASH / A2HS ================= */
+const isIOS=/iP(hone|ad|od)/.test(navigator.platform)||(/Mac/.test(navigator.platform)&&navigator.maxTouchPoints>1);
+const isInStandalone=('standalone' in navigator)&&navigator.standalone;
+window.addEventListener('load',()=>{
+  document.getElementById('langBtn').textContent=LANG.toUpperCase();
+  document.getElementById('a2hsTxt').textContent=t('a2hs');
+  setTimeout(()=>document.getElementById('splash').classList.add('hide'),650);
+  if(isIOS&&!isInStandalone&&!localStorage.getItem('minuit_a2hs'))setTimeout(()=>{document.getElementById('a2hs').style.display='flex';},1400);
+});
+
+/* ================= PWA ================= */
+if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch(()=>{});}
+
+renderPath();
+setTimeout(mascotTalk,1200);
 document.addEventListener('keydown',e=>{
   if(document.getElementById('lessonView').style.display!=='block')return;
   if(/^[1-4]$/.test(e.key)){const o=document.querySelectorAll('#opts .opt')[+e.key-1];if(o)o.click();}
   if(e.key==='Enter'){const b=document.getElementById('checkBtn');if(!b.disabled)b.click();}
 });
-
-renderPath();
-setTimeout(mascotTalk,1200);
-
-/* native iOS: splash + add-to-home prompt */
-const isIOS=/iP(hone|ad|od)/.test(navigator.platform) || (/Mac/.test(navigator.platform) && navigator.maxTouchPoints>1);
-const isInStandalone=('standalone' in navigator) && navigator.standalone;
-window.addEventListener('load',()=>{
-  setTimeout(()=>document.getElementById('splash').classList.add('hide'),650);
-  if(isIOS && !isInStandalone && !localStorage.getItem('minuit_a2hs')){
-    setTimeout(()=>{document.getElementById('a2hs').style.display='flex';},1400);
-  }
-});
-
-/* PWA service worker */
-if('serviceWorker' in navigator){
-  navigator.serviceWorker.register('sw.js').catch(()=>{});
-}
 </script>
 </body>
 </html>
