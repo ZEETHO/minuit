@@ -282,10 +282,10 @@ function bump(){const t=today();if(S.lastDay===t)return;const y=new Date(Date.no
 function refresh(){document.getElementById("stCoin").textContent=S.coin;document.getElementById("stStreak").textContent=S.streak;}
 
 /* ===== speech ===== */
-let fv=null;
-function pick(){const v=speechSynthesis.getVoices().filter(x=>x.lang.startsWith("fr"));fv=v.find(x=>/Thomas|Amélie|Audrey|Google/i.test(x.name))||v[0]||null;}
-speechSynthesis.onvoiceschanged=pick;pick();
-function spk(t){speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t.replace(/[?!]/g,""));u.lang="fr-FR";if(fv)u.voice=fv;u.rate=.85;speechSynthesis.speak(u);}
+let fv=null, SPEECH=false;
+function pick(){if(!SPEECH)return;const v=speechSynthesis.getVoices().filter(x=>x.lang.startsWith("fr"));fv=v.find(x=>/Thomas|Amélie|Audrey|Google/i.test(x.name))||v[0]||null;}
+if("speechSynthesis" in window){SPEECH=true;speechSynthesis.onvoiceschanged=pick;pick();}
+function spk(t){if(!SPEECH)return;speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t.replace(/[?!]/g,""));u.lang="fr-FR";if(fv)u.voice=fv;u.rate=.85;speechSynthesis.speak(u);}
 
 /* ===== helpers ===== */
 function shuf(a){return a.map(x=>[Math.random(),x]).sort((p,q)=>p[0]-q[1]).map(p=>p[1]);}
@@ -368,7 +368,7 @@ function onCheck(){
   else{L.w++;L.h--;fb.className="fb b";fb.innerHTML=`✗ ${T("wrong")}<br>${T("said")} "${L.sel||"—"}"<br><small>${T("ans")}: <b>${fr}</b> = ${mn}</small>`;sfx([392,0,262,.12]);document.getElementById("lhearts").textContent="❤️ "+L.h;}
   btn.textContent=T("cont");btn.classList.add("con");btn.disabled=false;
 }
-function sfx(n){try{const c=sfx.c||(sfx.c=new(window.AudioContext||window.webkitAudioContext)());n.forEach(([f,t])=>{if(!f)return;const o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.value=f;o.type="square";g.gain.setValueAtTime(.0001,c.currentTime+t);g.gain.exponentialRampToValueAtTime(.12,c.currentTime+t+.01);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+t+.18);o.start(c.currentTime+t);o.stop(c.currentTime+t+.2);});}catch(e){}}
+function sfx(n){try{if(!("AudioContext" in window)&&!("webkitAudioContext" in window))return;const AC=window.AudioContext||window.webkitAudioContext;const c=sfx.c||(sfx.c=new AC());n.forEach(([f,t])=>{if(!f)return;const o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.value=f;o.type="square";g.gain.setValueAtTime(.0001,c.currentTime+t);g.gain.exponentialRampToValueAtTime(.12,c.currentTime+t+.01);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+t+.18);o.start(c.currentTime+t);o.stop(c.currentTime+t+.2);});}catch(e){}}
 function fin(){const key=lk(L.ui,L.li),ft=!S.done[key],g=(ft?20:10)+L.r*2;S.done[key]=true;S.coin+=g;bump();save();
   showRes("🐈‍⬛",T("done"),T("night"),"+ "+g);}
 function fail(){showRes("😿",T("oh"),T("retry"),"+0");}
@@ -400,9 +400,13 @@ document.addEventListener("keydown",e=>{if(e.key==="Escape"){closeInstall();clos
 /* ===== splash / a2hs / pwa ===== */
 const iOS=/iP(hone|ad|od)/.test(navigator.platform)||(/Mac/.test(navigator.platform)&&navigator.maxTouchPoints>1);
 const stand=("standalone" in navigator)&&navigator.standalone;
-window.addEventListener("load",()=>{document.getElementById("langBtn").textContent=LANG.toUpperCase();document.getElementById("a2ht").textContent=T("a2h");
-  setTimeout(()=>document.getElementById("splash").classList.add("hide"),600);
-  if(iOS&&!stand&&!localStorage.getItem("minuit_a2hs"))setTimeout(()=>{document.getElementById("a2hs").style.display="flex";},1300);});
+function hideSplash(){document.getElementById("splash").classList.add("hide");}
+function showA2hs(){if(iOS&&!stand&&!localStorage.getItem("minuit_a2hs"))document.getElementById("a2hs").style.display="flex";}
+if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",()=>{setTimeout(hideSplash,500);setTimeout(showA2hs,1200);});}
+else{setTimeout(hideSplash,500);setTimeout(showA2hs,1200);}
+window.addEventListener("load",()=>{document.getElementById("langBtn").textContent=LANG.toUpperCase();document.getElementById("a2ht").textContent=T("a2h");});
+// hard fallback: never let the splash trap the user
+setTimeout(hideSplash,2500);
 if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});
 
 renderPath();
