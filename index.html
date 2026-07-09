@@ -319,7 +319,7 @@ let L=null;
 function start(ui,li){
   const les=COURSE[ui].lessons[li];
   const ex=[];shuf(les.p).forEach((p,i)=>{const ty=i%3;ex.push(ty===0?{t:"fr2en",p}:ty===1?{t:"listen",p}:{t:"en2fr",p});});
-  les.s.forEach(s=>ex.push({t:"bank",s}));
+  les.s.forEach(s=>ex.push({t:"bank",s:{fr:s[0],en:s[1]}}));
   L={ui,li,ex:shuf(ex).slice(0,9),i:0,h:5,r:0,w:0,ans:false,sel:null};
   document.getElementById("pathView").style.display="none";
   document.getElementById("resultView").style.display="none";
