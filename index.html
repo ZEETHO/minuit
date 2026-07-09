@@ -11,7 +11,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="MINUIT">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Press+Start+2P&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Press+Start+2P&family=Noto+Sans+JP:wght@500;700;800&family=Noto+Sans+SC:wght@500;700;800&display=swap" rel="stylesheet">
 <style>
 :root{
   --sky:#8ecbff; --sky2:#cdeeff; --cloud:#ffffff;
@@ -25,7 +25,7 @@
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 body{
-  color:var(--ink); min-height:100vh; font-family:"Baloo 2","Avenir Next",system-ui,sans-serif;
+  color:var(--ink); min-height:100vh; font-family:"Baloo 2","Noto Sans JP","Noto Sans SC","Avenir Next",system-ui,sans-serif;
   overflow-x:hidden;
   background:
     radial-gradient(circle at 18% 12%, rgba(255,255,255,.9) 0 6px, transparent 7px),
@@ -362,13 +362,63 @@ const I18N = {
       {ico:"➕",t:"Toca <b>«Instalar app»</b> o <b>«Añadir a pantalla de inicio»</b>."},
       {ico:"✔️",t:"Confirma tocando <b>Instalar</b>."},
       {ico:"🌙",t:"El icono <b>MINUIT</b> está en tu inicio — como app nativa, sin conexión."}]
+  },
+  ja:{
+    unit:"ユニット", translateToEnglish:"英語に訳す", translateToFrench:"フランス語に訳す",
+    whatDoYouHear:"何が聞こえますか？", buildSentence:"文を作る",
+    check:"チェック", cont:"つづける", correct:"せいかい！", notQuite:"ざんねん",
+    answer:"こたえ", youSaid:"あなたのこたえ", lessonComplete:"レッスン完了！", nightYours:"パリの夜はあなたのもの。",
+    lblXP:"スター", lblAcc:"せいかくさ", lblStreak:"れんぞく", outHearts:"ハートがきれた！", tryAgain:"ハートがきれたけど、夜はながい。もういちど！",
+    installTitle:"MINUITをインストール", installSub:"パリの夜のフランス語アプリ — 無料・オフライン・App Store不要",
+    alreadyInstalled:"もうインストールした？ホーム画面からひらいてね。🌙",
+    a2hs:"MINUITをインストール：共有 ⤴ → 「ホーム画面に追加」",
+    streak:"れんぞく日数", coins:"スター", langName:"日本語",
+    mascot:["ミヌー「毎晩15分で連続記録をキープ！🌙」","こたえは声に出して言おう — 口もおぼえるよ！","ヒント：『Je voudrais』+指さし = フランスで生き抜く。","夜は暗く、動詞であふれている。⚡","連続記録は深夜以降… いつでもOK。","インストール案内をひらく — わたしをタップして「ホーム画面に追加」📲"],
+    ios:[
+      {ico:"🌐",t:"<b>Safari</b>で<b>minuit</b>をひらく — この案内はSafari専用。"},
+      {ico:"⤴️",t:"したの<b>共有</b>ボタン（四角に矢印）をタップ。"},
+      {ico:"📲",t:"メニューをスクロールして<b>「ホーム画面に追加」</b>をタップ。"},
+      {ico:"✏️",t:"名前は<b>MINUIT</b>のまま（かえてもOK）で、右上の<b>追加</b>をタップ。"},
+      {ico:"🌙",t:"Safariをとじる。<b>MINUIT</b>アイコンがホーム画面に — フル画面・オフライン。"}],
+    android:[
+      {ico:"🌐",t:"<b>Chrome</b>で<b>minuit</b>をひらく。"},
+      {ico:"⋮",t:"右上の<b>⋮メニュー</b>（三点）をタップ。"},
+      {ico:"➕",t:"<b>「アプリをインストール」</b>または<b>「ホーム画面に追加」</b>をタップ。"},
+      {ico:"✔️",t:"ポップアップの<b>インストール</b>をタップして確定。"},
+      {ico:"🌙",t:"<b>MINUIT</b>アイコンがホーム画面に — ネイティブアプリのように、オフライン。"}]
+  },
+  zh:{
+    unit:"单元", translateToEnglish:"翻译成英文", translateToFrench:"翻译成法文",
+    whatDoYouHear:"你听到了什么？", buildSentence:"组句子",
+    check:"检查", cont:"继续", correct:"答对啦！", notQuite:"差一点",
+    answer:"答案", youSaid:"你的回答", lessonComplete:"课程完成！", nightYours:"巴黎的夜晚属于你。",
+    lblXP:"星星", lblAcc:"正确率", lblStreak:"连续天数", outHearts:"心心用完了！", tryAgain:"心心用完了——但夜晚还长。再试一次！",
+    installTitle:"安装 MINUIT", installSub:"你的巴黎夜读法文 app — 免费、离线、无需 App Store",
+    alreadyInstalled:"已安装？从主屏幕打开即可。🌙",
+    a2hs:"安装 MINUIT：点共享 ⤴ →「添加到主屏幕」",
+    streak:"连续天数", coins:"星星", langName:"中文",
+    mascot:["米努说：每晚15分钟，连续记录不断。🌙","把每个答案念出声——嘴巴也会学！","提示：『Je voudrais』+ 指一指 = 在法国活下去。","夜色深沉，满是动词。⚡","连续记录在午夜后……或任何时候都行。","打开安装指南——点我，再「添加到主屏幕」。📲"],
+    ios:[
+      {ico:"🌐",t:"在<b>Safari</b>里打开<b>minuit</b> — 本指南仅 Safari 可用。"},
+      {ico:"⤴️",t:"点下方的<b>共享</b>按钮（带箭头的方块）。"},
+      {ico:"📲",t:"向下滑，点<b>「添加到主屏幕」</b>。"},
+      {ico:"✏️",t:"名字保持<b>MINUIT</b>（可改），点右上角<b>添加</b>。"},
+      {ico:"🌙",t:"关掉 Safari。<b>MINUIT</b> 图标已在主屏幕——全屏、离线。"}],
+    android:[
+      {ico:"🌐",t:"在<b>Chrome</b>里打开<b>minuit</b>。"},
+      {ico:"⋮",t:"点右上角<b>⋮ 菜单</b>（三个点）。"},
+      {ico:"➕",t:"点<b>「安装应用」</b>或<b>「添加到主屏幕」</b>。"},
+      {ico:"✔️",t:"在弹窗中点<b>安装</b>确认。"},
+      {ico:"🌙",t:"<b>MINUIT</b> 图标出现在主屏幕——像原生 app，可离线。"}]
   }
 };
-const LANGS=['en','fr','es'];
+const LANGS=['en','fr','es','ja','zh'];
 let LANG=localStorage.getItem('minuit_lang')||'en';
 function t(k){return (I18N[LANG]&&I18N[LANG][k]!=null)?I18N[LANG][k]:I18N.en[k];}
-function meaning(pair){ // translation of the French word into current UI language
-  if(LANG==='es') return (ES_DICT[pair[2]]||pair[2]);
+function meaning(pair){
+  if(LANG==='es') return ES_DICT[pair[2]]||pair[2];
+  if(LANG==='ja') return JA_DICT[pair[2]]||pair[2];
+  if(LANG==='zh') return ZH_DICT[pair[2]]||pair[2];
   return pair[2];
 }
 
@@ -394,6 +444,51 @@ const ES_DICT={
   "I went":"fui","I left":"salí","two years ago":"hace dos años","Yeah":"Sí","So / as a result":"Entonces","Anyway":"En fin",
   "Totally!":"¡Totalmente!","That's awesome":"Es genial","That sucks":"Es una porquería","Don't worry":"No te preocupes",
   "That works!":"¡Eso funciona!","a thing":"una cosa","work (slang)":"el curro/trabajo","What's new?":"¿Qué hay de nuevo?","Cheers!":"¡Salud!"
+};
+
+/* Japanese meanings (accurate) */
+const JA_DICT={
+  "Hello":"こんにちは","Good evening":"こんばんは","Hi (casual)":"やあ","Goodbye":"さようなら",
+  "Thank you":"ありがとう","You're welcome":"どういたしまして","Please":"お願いします","Excuse me":"すみません","Sorry":"ごめんなさい",
+  "Yes":"はい","No":"いいえ","How's it going?":"元気？","My name is...":"名前は…","I would like":"～がほしい",
+  "Where's the bathroom?":"トイレはどこ？","The check, please":"お会計を","How much is it?":"いくらですか？",
+  "I'm lost":"道に迷った","Help!":"助けて！","I don't understand":"わかりません","Do you speak English?":"英語を話しますか？",
+  "Slower":"もっとゆっくり","I need help":"助けが必要","a coffee":"コーヒー","some water":"水","some wine":"ワイン",
+  "a beer":"ビール","the menu":"メニュー","A table for two":"2人席","It's delicious":"おいしい","the bread":"パン",
+  "the cheese":"チーズ","I'm hungry":"お腹すいた","too expensive":"高すぎる","I'll take it":"これにする","by card":"カードで",
+  "in cash":"現金で","the money":"お金","I am":"私は～です","you are":"あなたは～","he is":"彼は～","I have":"私は～を持っている",
+  "you have":"あなたは～を持っている","we have":"私たちは～を持っている","I go / I'm going":"行く","you go":"あなたは行く","we go":"私たちは行く",
+  "I do / make":"する","he does":"彼はする","Let's go!":"行こう！","I want":"～がほしい","you want":"あなたは～がほしい",
+  "I can":"できる","I must":"～しなければならない","I know":"知っている","I want to leave":"帰りたい","to the left":"左に",
+  "to the right":"右に","straight ahead":"まっすぐ","Where is...?":"～はどこ？","near":"近くに","far from":"遠く離れて",
+  "the station":"駅","the hotel":"ホテル","the street":"通り","the city":"街","the metro":"メトロ","the night":"夜",
+  "today":"今日","tomorrow":"明日","yesterday":"昨日","now":"今","soon":"すぐ","What time is it?":"今何時？","I ate":"食べた",
+  "I did":"した","I saw":"見た","I took":"取った","I said":"言った","I had":"あった","I was":"～だった","it was":"～だった",
+  "the weather was nice":"天気が良かった","I went":"行った","I left":"出た","two years ago":"2年前","Yeah":"うん",
+  "So / as a result":"だから","Anyway":"とにかく","Totally!":"ぜんぜん！","That's awesome":"すごい","That sucks":"最悪",
+  "Don't worry":"心配しないで","That works!":"うまくいく","a thing":"もの","work (slang)":"仕事","What's new?":"何か新しい？","Cheers!":"乾杯！"
+};
+
+/* Chinese meanings (accurate, Simplified) */
+const ZH_DICT={
+  "Hello":"你好","Good evening":"晚上好","Hi (casual)":"嗨","Goodbye":"再见",
+  "Thank you":"谢谢","You're welcome":"不客气","Please":"请","Excuse me":"打扰一下","Sorry":"抱歉",
+  "Yes":"是","No":"不","How's it going?":"最近好吗？","My name is...":"我叫……","I would like":"我想要",
+  "Where's the bathroom?":"厕所在哪？","The check, please":"买单","How much is it?":"多少钱？",
+  "I'm lost":"我迷路了","Help!":"救命！","I don't understand":"我听不懂","Do you speak English?":"你会说英语吗？",
+  "Slower":"慢一点","I need help":"我需要帮助","a coffee":"一杯咖啡","some water":"一些水","some wine":"一些葡萄酒",
+  "a beer":"一杯啤酒","the menu":"菜单","A table for two":"两人桌","It's delicious":"很好吃","the bread":"面包",
+  "the cheese":"奶酪","I'm hungry":"我饿了","too expensive":"太贵了","I'll take it":"我就要这个","by card":"刷卡",
+  "in cash":"付现金","the money":"钱","I am":"我是","you are":"你是","he is":"他是","I have":"我有","you have":"你有",
+  "we have":"我们有","I go / I'm going":"我去","you go":"你去","we go":"我们去","I do / make":"我做","he does":"他做",
+  "Let's go!":"走吧！","I want":"我想要","you want":"你想要","I can":"我能","I must":"我必须","I know":"我知道",
+  "I want to leave":"我想走","to the left":"向左","to the right":"向右","straight ahead":"一直走","Where is...?":"……在哪？",
+  "near":"在……附近","far from":"离……远","the station":"车站","the hotel":"酒店","the street":"街道","the city":"城市",
+  "the metro":"地铁","the night":"夜晚","today":"今天","tomorrow":"明天","yesterday":"昨天","now":"现在","soon":"很快",
+  "What time is it?":"几点了？","I ate":"我吃了","I did":"我做了","I saw":"我看见了","I took":"我拿了","I said":"我说了",
+  "I had":"我有过","I was":"我曾是","it was":"它曾是","the weather was nice":"天气很好","I went":"我去了","I left":"我离开了",
+  "two years ago":"两年前","Yeah":"对","So / as a result":"所以","Anyway":"总之","Totally!":"完全！","That's awesome":"太棒了",
+  "That sucks":"糟透了","Don't worry":"别担心","That works!":"行得通","a thing":"东西","work (slang)":"工作","What's new?":"有什么新鲜事？","Cheers!":"干杯！"
 };
 
 /* ================= COURSE ================= */
