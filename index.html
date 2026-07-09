@@ -202,7 +202,24 @@ h2.unit::after{content:"";flex:1;height:4px;background:repeating-linear-gradient
 .im-foot{text-align:center;color:#5a4f7a;font-weight:700;font-size:.75rem;margin-top:12px}
 
 /* ===== toast ===== */
-#toast{position:fixed;left:50%;top:18%;transform:translateX(-50%) translateY(-20px);z-index:500;
+/* ===== language picker ===== */
+#langModal{position:fixed;inset:0;z-index:420;background:rgba(20,12,40,.8);backdrop-filter:blur(6px);
+  display:none;align-items:center;justify-content:center;padding:18px}
+#langModal.show{display:flex;animation:fadeIn .25s ease}
+.lm-card{background:var(--panel);border:4px solid var(--border);border-radius:22px;width:min(380px,100%);
+  padding:22px 20px 20px;position:relative;animation:pop .35s cubic-bezier(.3,1.4,.5,1);box-shadow:0 8px 0 #b98a3e}
+.lm-close{position:absolute;top:14px;right:16px;background:var(--red);border:2px solid #b51410;color:#fff;
+  width:30px;height:30px;border-radius:9px;font-size:1rem;cursor:pointer;font-weight:900}
+.lm-title{font-family:"Press Start 2P",monospace;font-size:.8rem;color:var(--red);margin-bottom:16px;padding-right:30px}
+.lm-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.lm-opt{display:flex;align-items:center;gap:10px;background:var(--panel2);border:3px solid var(--border);
+  border-radius:14px;padding:12px 14px;cursor:pointer;font-weight:800;font-size:.95rem;transition:all .15s;color:var(--ink)}
+.lm-opt:hover{transform:translateY(-2px);border-color:var(--blue)}
+.lm-opt.active{background:var(--blue);color:#fff;border-color:#1d4fb5}
+.lm-opt .flag{font-size:1.6rem;line-height:1}
+.lm-opt .nm{display:flex;flex-direction:column;line-height:1.1}
+.lm-opt .nm small{font-size:.62rem;color:var(--muted);font-weight:700}
+.lm-opt.active .nm small{color:#dcebff}
   background:var(--ink);color:#fff;padding:10px 18px;border-radius:14px;font-weight:800;font-size:.9rem;
   opacity:0;transition:all .3s;pointer-events:none}
 #toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
@@ -233,7 +250,7 @@ h2.unit::after{content:"";flex:1;height:4px;background:repeating-linear-gradient
     <div class="spacer"></div>
     <div class="stat streak"><span>🔥</span><span id="stStreak">0</span></div>
     <div class="stat coin"><span>🪙</span><span id="stCoin">0</span></div>
-    <button class="langbtn" id="langBtn" onclick="cycleLang()">EN</button>
+    <button class="langbtn" id="langBtn" onclick="openLangPicker()">EN</button>
   </div>
 
   <div id="pathView"></div>
@@ -287,6 +304,15 @@ h2.unit::after{content:"";flex:1;height:4px;background:repeating-linear-gradient
   </div>
 </div>
 <div id="toast"></div>
+
+<!-- ===== language picker ===== -->
+<div id="langModal" onclick="if(event.target===this)closeLangPicker()">
+  <div class="lm-card">
+    <button class="lm-close" onclick="closeLangPicker()">✕</button>
+    <div class="lm-title" id="lmTitle">Language</div>
+    <div class="lm-grid" id="lmGrid"></div>
+  </div>
+</div>
 
 <script>
 /* ================= I18N ================= */
@@ -779,12 +805,35 @@ function setPlatform(p,tab){document.querySelectorAll('.im-tab').forEach(t=>t.cl
     `<div class="im-step"><div class="im-num">${i+1}</div><div class="im-ico">${s.ico}</div><div class="im-text">${s.t}</div></div>`).join('');}
 function applyInstallLang(){document.getElementById('imTitle').textContent=t('installTitle');document.getElementById('imSub').textContent=t('installSub');
   document.getElementById('imFoot').textContent=t('alreadyInstalled');setPlatform('ios',document.getElementById('imTabIos'));}
-document.addEventListener('keydown',e=>{if(e.key==='Escape')closeInstall();});
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){closeInstall();closeLangPicker();}
+});
+function applyLangMeta(){document.getElementById('lmTitle').textContent=t('langName');}
 
 /* ================= LANGUAGE SWITCHER ================= */
-function cycleLang(){const i=LANGS.indexOf(LANG);LANG=LANGS[(i+1)%LANGS.length];localStorage.setItem('minuit_lang',LANG);
+const LANG_META={
+  en:{flag:"🇬🇧",name:"English",sub:"English"},
+  fr:{flag:"🇫🇷",name:"Français",sub:"French"},
+  es:{flag:"🇪🇸",name:"Español",sub:"Spanish"},
+  ja:{flag:"🇯🇵",name:"日本語",sub:"Japanese"},
+  zh:{flag:"🇨🇳",name:"中文",sub:"Chinese"}
+};
+function openLangPicker(){
+  applyLangMeta();
+  const grid=document.getElementById('lmGrid');
+  grid.innerHTML=LANGS.map(code=>{
+    const m=LANG_META[code];
+    return `<button class="lm-opt ${code===LANG?'active':''}" onclick="chooseLang('${code}')">
+      <span class="flag">${m.flag}</span><span class="nm">${m.name}<small>${m.sub}</small></span></button>`;
+  }).join('');
+  document.getElementById('langModal').classList.add('show');
+}
+function closeLangPicker(){document.getElementById('langModal').classList.remove('show');}
+function chooseLang(code){
+  LANG=code;localStorage.setItem('minuit_lang',LANG);
   document.getElementById('langBtn').textContent=LANG.toUpperCase();
-  toast('🌐 '+t('langName'));
+  closeLangPicker();
+  toast(LANG_META[code].flag+' '+LANG_META[code].name);
   document.getElementById('a2hsTxt').textContent=t('a2hs');
   renderPath();
   if(document.getElementById('lessonView').style.display==='block')renderEx();
