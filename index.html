@@ -190,6 +190,38 @@ h2.unit::after{content:"";flex:1;height:1px;background:var(--glass-bd)}
 .im-step .im-ico{font-size:1.5rem} .im-step .im-text{flex:1;line-height:1.4;font-size:.9rem} .im-step .im-text b{color:var(--gold)}
 .im-foot{text-align:center;color:var(--muted);font-size:.75rem;margin-top:14px}
 
+/* ===== top bar icon button ===== */
+.iconbtn{background:var(--glass);border:1px solid var(--glass-bd);border-radius:12px;color:var(--ink);
+  font-size:1.15rem;width:38px;height:38px;cursor:pointer;flex:none;transition:transform .1s,background .15s}
+.iconbtn:active{transform:scale(.92);background:var(--panel2)}
+
+/* ===== translator modal ===== */
+.tr-row{display:flex;align-items:center;gap:8px;margin-bottom:14px}
+.tr-sel{flex:1;min-width:0;background:var(--surface);border:1px solid var(--glass-bd);color:var(--ink);
+  border-radius:12px;padding:11px 10px;font-size:.9rem;font-weight:700;font-family:inherit;outline:none;
+  -webkit-appearance:none;appearance:none}
+.tr-sel:focus{border-color:var(--neon)}
+.tr-swap{background:var(--glass);border:1px solid var(--glass-bd);border-radius:12px;color:var(--neon);
+  font-size:1.2rem;width:42px;height:42px;cursor:pointer;flex:none;transition:transform .2s}
+.tr-swap:active{transform:rotate(180deg)}
+.tr-in{width:100%;background:var(--panel);border:1px solid var(--glass-bd);border-radius:var(--r);
+  color:var(--ink);padding:14px;font-size:1.05rem;margin-bottom:12px;outline:none;font-family:inherit;resize:vertical}
+.tr-in:focus{border-color:var(--neon)}
+.tr-out{min-height:70px;background:var(--panel);border:1px solid var(--glass-bd);border-radius:var(--r);
+  padding:14px 16px;font-size:1.1rem;font-weight:700;line-height:1.4;margin-bottom:14px;word-wrap:break-word}
+.tr-out .tr-ph{color:var(--muted);font-weight:500;font-style:italic}
+.tr-out.loading{opacity:.6}
+.tr-actions{display:flex;align-items:center;gap:10px}
+.tr-say{background:linear-gradient(145deg,var(--neon),#5a3cf0);border:none;border-radius:14px;color:#fff;
+  font-size:1.3rem;width:52px;height:52px;cursor:pointer;flex:none;box-shadow:0 5px 14px rgba(139,108,255,.4);transition:transform .1s}
+.tr-say:disabled{background:var(--panel);color:var(--muted);box-shadow:none;cursor:not-allowed}
+.tr-say:not(:disabled):active{transform:scale(.92)}
+.tr-actions .bigBtn{flex:1;margin-left:0}
+.tr-note{text-align:center;color:var(--muted);font-size:.7rem;margin-top:12px}
+
+@keyframes trpop{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+#translatorModal.show .im-card{animation:trpop .3s cubic-bezier(.3,1.4,.5,1)}
+
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
@@ -211,6 +243,7 @@ h2.unit::after{content:"";flex:1;height:1px;background:var(--glass-bd)}
   <div id="topbar">
     <div class="logo"><span class="moon">🌙</span>MIN<b>UIT</b></div>
     <div class="spacer"></div>
+    <button class="iconbtn" onclick="openTranslator()" title="Translator">🌐</button>
     <div class="pill streak">🔥 <span id="stStreak">0</span></div>
     <div class="pill xp">✦ <span id="stXP">0</span></div>
   </div>
@@ -257,6 +290,50 @@ h2.unit::after{content:"";flex:1;height:1px;background:var(--glass-bd)}
       </div>
       <div class="im-body" id="imBody"></div>
       <div class="im-foot">Already installed? Just open it from your home screen. 🌙</div>
+    </div>
+  </div>
+
+  <!-- ===== Translator modal ===== -->
+  <div id="translatorModal" onclick="if(event.target===this)closeTranslator()">
+    <div class="im-card">
+      <button class="im-close" onclick="closeTranslator()">✕</button>
+      <div class="im-head">
+        <div class="im-cat">🌐</div>
+        <div>
+          <div class="im-title">Translator</div>
+          <div class="im-sub">Tap 🔊 to hear it spoken aloud in French</div>
+        </div>
+      </div>
+      <div class="tr-row">
+        <select id="trFrom" class="tr-sel" onchange="trFromChanged()">
+          <option value="fr">🇫🇷 Français</option>
+          <option value="en">🇬🇧 English</option>
+          <option value="es">🇪🇸 Español</option>
+          <option value="de">🇩🇪 Deutsch</option>
+          <option value="it">🇮🇹 Italiano</option>
+          <option value="pt">🇵🇹 Português</option>
+          <option value="ja">🇯🇵 日本語</option>
+          <option value="zh">🇨🇳 中文</option>
+        </select>
+        <button class="tr-swap" onclick="swapLangs()" title="Swap">⇄</button>
+        <select id="trTo" class="tr-sel">
+          <option value="en">🇬🇧 English</option>
+          <option value="fr" selected>🇫🇷 Français</option>
+          <option value="es">🇪🇸 Español</option>
+          <option value="de">🇩🇪 Deutsch</option>
+          <option value="it">🇮🇹 Italiano</option>
+          <option value="pt">🇵🇹 Português</option>
+          <option value="ja">🇯🇵 日本語</option>
+          <option value="zh">🇨🇳 中文</option>
+        </select>
+      </div>
+      <textarea id="trIn" class="tr-in" rows="3" placeholder="Type or paste text…" oninput="trInput()"></textarea>
+      <div class="tr-out" id="trOut"><span class="tr-ph">Translation appears here…</span></div>
+      <div class="tr-actions">
+        <button class="tr-say" id="trSay" onclick="trSpeak()" disabled>🔊</button>
+        <button class="bigBtn" id="trGo" onclick="trTranslate()" disabled>Translate</button>
+      </div>
+      <div class="tr-note">Free machine translation · needs internet · no account</div>
     </div>
   </div>
 
@@ -603,17 +680,50 @@ function hideA2hs(){ $('a2hs').style.display='none'; localStorage.setItem(HIDE_A
 
 /* keyboard: 1-4 select option, Enter = check (lesson only) */
 document.addEventListener('keydown',e=>{
-  if(e.key==='Escape'){ closeInstall(); return; }
+  if(e.key==='Escape'){ closeInstall(); closeTranslator(); return; }
+  if(e.key==='Enter' && $('translatorModal').classList.contains('show')){ trTranslate(); return; }
   if($('lessonView').style.display!=='block')return;
   if(/^[1-4]$/.test(e.key)){const o=$$('#opts .opt')[+e.key-1]; if(o)o.click();}
   if(e.key==='Enter'){const b=$('checkBtn'); if(!b.disabled)b.click();}
 });
 
-/* ================= BOOT ================= */
-renderPath();
-setTimeout(mascotTalk,1200);
+/* ================= TRANSLATOR ================= */
+const TR_LANGNAME={fr:'fr-FR',en:'en-US',es:'es-ES',de:'de-DE',it:'it-IT',pt:'pt-PT',ja:'ja-JP',zh:'zh-CN'};
+let trLast='';
+function openTranslator(){ $('translatorModal').classList.add('show'); setTimeout(()=>$('trIn').focus(),120); }
+function closeTranslator(){ $('translatorModal').classList.remove('show'); }
+function swapLangs(){ const f=$('trFrom'),t=$('trTo'); const tmp=f.value; f.value=t.value; t.value=tmp; if($('trIn').value.trim())trTranslate(); }
+function trFromChanged(){ /* keep selection; user drives both dropdowns */ }
+function trInput(){ const v=$('trIn').value.trim(); $('trGo').disabled=!v; }
+function trSetOut(text){ $('trOut').innerHTML=text?escHtml(text):'<span class="tr-ph">Translation appears here…</span>'; }
+function escHtml(s){return s.replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));}
+async function trTranslate(){
+  const q=$('trIn').value.trim();
+  if(!q)return;
+  const from=$('trFrom').value, to=$('trTo').value;
+  const out=$('trOut'); out.classList.add('loading'); $('trGo').disabled=true;
+  try{
+    const url='https://api.mymemory.translated.net/get?q='+encodeURIComponent(q)+'&langpair='+from+'|'+to;
+    const r=await fetch(url);
+    const j=await r.json();
+    const txt=(j&&j.responseData&&j.responseData.translatedText)||'';
+    if(txt){ trSetOut(txt); trLast=txt; $('trSay').disabled=false; }
+    else { trSetOut('⚠️ No translation returned. Try again.'); $('trSay').disabled=true; }
+  }catch(err){ trSetOut('⚠️ Network error — check your connection.'); $('trSay').disabled=true; }
+  out.classList.remove('loading'); $('trGo').disabled=!q;
+}
+function trSpeak(){
+  if(!trLast||!HAS_SPEECH)return;
+  // speak in the TARGET language's voice when possible
+  const tgt=$('trTo').value;
+  speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(trLast);
+  u.lang=TR_LANGNAME[tgt]||'fr-FR';
+  const v=speechSynthesis.getVoices().find(x=>x.lang===u.lang)||speechSynthesis.getVoices().find(x=>x.lang.startsWith(tgt));
+  if(v)u.voice=v; u.rate=.9; speechSynthesis.speak(u);
+}
 
-/* splash + a2hs — never trap the user */
+/* ================= splash + a2hs — never trap the user ================= */
 const isIOS=/iP(hone|ad|od)/.test(navigator.platform)||(/Mac/.test(navigator.platform)&&navigator.maxTouchPoints>1);
 const isStandalone=('standalone' in navigator)&&navigator.standalone;
 const hideSplash=()=>{const s=$('splash'); if(s)s.classList.add('hide');};
