@@ -10,6 +10,8 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="MINUIT">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Noto+Sans+JP:wght@500;700&family=Noto+Sans+SC:wght@500;700&display=swap" rel="stylesheet">
 <style>
 :root{
   --bg:#0a0d1a; --bg2:#0f1430;
@@ -194,6 +196,7 @@ h2.unit::after{content:"";flex:1;height:1px;background:var(--glass-bd)}
 .iconbtn{background:var(--glass);border:1px solid var(--glass-bd);border-radius:12px;color:var(--ink);
   font-size:1.15rem;width:38px;height:38px;cursor:pointer;flex:none;transition:transform .1s,background .15s}
 .iconbtn:active{transform:scale(.92);background:var(--panel2)}
+.iconbtn.lang-on{display:flex!important;align-items:center;justify-content:center;font-weight:900;font-size:.7rem}
 
 /* ===== translator modal ===== */
 .tr-row{display:flex;align-items:center;gap:8px;margin-bottom:14px}
@@ -228,6 +231,37 @@ h2.unit::after{content:"";flex:1;height:1px;background:var(--glass-bd)}
 @keyframes trpop{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 #translatorModal.show .im-card{animation:trpop .3s cubic-bezier(.3,1.4,.5,1)}
 
+/* ===== MARIO MODE THEME (scoped to body.mario) ===== */
+body.mario{--bg:#5c94fc;--bg2:#5c94fc;--glass:rgba(255,255,255,.12);--glass-bd:rgba(255,255,255,.35);
+  --panel:#e52521;--panel2:#ff7b29;--surface:#43b047;--ink:#fff;--muted:#ffe9c2;
+  --gold:#ffd24a;--neon:#00b8f0;--pink:#ff5c9d;--green:#3ddc97;--red:#e52521;
+  --shadow:0 6px 0 rgba(0,0,0,.35);font-family:"Press Start 2P","Noto Sans JP","Noto Sans SC","Avenir Next",system-ui,sans-serif}
+body.mario::before{background:repeating-linear-gradient(180deg,rgba(255,255,255,.08) 0 28px,transparent 28px 32px)}
+body.mario #stars{display:none}
+body.mario .logo{font-family:"Press Start 2P",monospace;font-size:.95rem}
+body.mario .unitDesc,body.mario .pill,body.mario .im-sub,body.mario .im-foot{font-family:"Press Start 2P",monospace;font-size:.52rem;line-height:1.6}
+body.mario h2.unit{font-family:"Press Start 2P",monospace;font-size:.62rem;color:#fff;text-shadow:2px 2px 0 #1d4ed8}
+body.mario .node.next{background:linear-gradient(145deg,#ffe000,#ffb800);border-color:#fff;color:#7a4a08;animation:bob 1.4s infinite}
+body.mario .node.next::after{border-color:rgba(255,255,255,.8)}
+body.mario .node.done{background:linear-gradient(145deg,#43b047,#2e8b32);border-color:#bff7c2;color:#06310a}
+body.mario .node{background:#e52521;border-color:#fff;box-shadow:0 6px 0 #8a1410}
+body.mario .node .label{font-family:"Press Start 2P",monospace;font-size:.5rem;color:#fff}
+body.mario .mascot{filter:drop-shadow(0 4px 8px rgba(0,0,0,.4))}
+body.mario .opt,.body.mario .chip,.body.mario .tr-sel,.body.mario .tr-in,.body.mario .tr-out,.body.mario .im-card,.body.mario .im-tab,.body.mario .resBox,.body.mario .pill{font-family:"Press Start 2P","Noto Sans JP","Noto Sans SC",monospace}
+body.mario .opt{font-size:.62rem;line-height:1.5;padding:14px 12px}
+body.mario .opt .key{border-radius:6px}
+body.mario .chip{font-size:.6rem}
+body.mario .exType{font-family:"Press Start 2P",monospace;font-size:.55rem;border-radius:99px;background:rgba(255,210,74,.25);border-color:#ffd24a;color:#fff}
+body.mario .prompt{font-size:1.1rem;font-weight:400}
+body.mario .pron{font-style:normal;font-size:.55rem;color:#ffe9c2;font-family:"Press Start 2P",monospace}
+body.mario .bigBtn{font-family:"Press Start 2P",monospace;font-size:.6rem;box-shadow:0 5px 0 #1d4ed8}
+body.mario .checkBar{background:rgba(20,40,120,.92);border-top:3px solid #fff}
+body.mario .im-card{background:#e52521;border:3px solid #fff}
+body.mario .im-tab.active{background:#ffe000;color:#7a4a08}
+body.mario #topbar{background:linear-gradient(180deg,#5c94fc 70%,transparent)}
+body.mario .iconbtn,body.mario .langbtn{font-family:"Press Start 2P",monospace}
+body.mario .feedbk{font-family:"Press Start 2P",monospace;font-size:.62rem}
+
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
@@ -249,7 +283,9 @@ h2.unit::after{content:"";flex:1;height:1px;background:var(--glass-bd)}
   <div id="topbar">
     <div class="logo"><span class="moon">🌙</span>MIN<b>UIT</b></div>
     <div class="spacer"></div>
+    <button class="langbtn" id="langBtn" onclick="cycleLang()" style="display:none"></button>
     <button class="iconbtn" onclick="openTranslator()" title="Translator">🌐</button>
+    <button class="iconbtn" id="modeBtn" onclick="toggleMode()" title="Switch theme">🍄</button>
     <div class="pill streak">🔥 <span id="stStreak">0</span></div>
     <div class="pill xp">✦ <span id="stXP">0</span></div>
   </div>
@@ -270,9 +306,9 @@ h2.unit::after{content:"";flex:1;height:1px;background:var(--glass-bd)}
     <h2 id="resTitle">Leçon terminée !</h2>
     <p id="resSub">The Paris night is yours.</p>
     <div class="resStats">
-      <div class="resBox"><div class="n" style="color:var(--neon)" id="resXP">+0</div><div class="t">XP earned</div></div>
-      <div class="resBox"><div class="n" style="color:var(--green)" id="resAcc">0%</div><div class="t">Accuracy</div></div>
-      <div class="resBox"><div class="n" style="color:var(--gold)" id="resStreak">0</div><div class="t">Day streak</div></div>
+    <div class="resBox"><div class="n" style="color:var(--neon)" id="resXP">+0</div><div class="t" id="lblXP">XP earned</div></div>
+    <div class="resBox"><div class="n" style="color:var(--green)" id="resAcc">0%</div><div class="t" id="lblA">Accuracy</div></div>
+    <div class="resBox"><div class="n" style="color:var(--gold)" id="resStreak">0</div><div class="t" id="lblS">Day streak</div></div>
     </div>
     <button class="bigBtn continue" onclick="backToPath()">Continue</button>
   </div>
@@ -465,6 +501,66 @@ const COURSE=[
   ]},
 ];
 
+/* ================= I18N (Mario mode languages) ================= */
+const LANGS=['en','fr','es','ja','zh'];
+let MODE=localStorage.getItem('minuit_mode')||'sleek';   // 'sleek' | 'mario'
+let LANG=localStorage.getItem('minuit_lang')||'en';        // used only in mario mode
+const LANG_NAME={en:'EN',fr:'FR',es:'ES',ja:'JA',zh:'ZH'};
+
+/* UI strings per language (Mario mode). Falls back to English. */
+const UI={
+  en:{toEn:"Translate to English",toFr:"Translate to French",listen:"What do you hear?",build:"Build the sentence",
+    check:"Check",cont:"Continue",right:"✓ Excellent !",wrong:"✗ Not quite",said:"You said",ans:"Answer",
+    done:"Lesson complete!",night:"The Paris night is yours.",oh:"Out of hearts!",retry:"Out of hearts — but the night is long. Try again!",
+    lXP:"XP earned",lA:"Accuracy",lS:"Day streak",
+    mascot:["15 minutes a night keeps the streak alive. 🌙","Say every answer out loud — your mouth learns too.","Tip: 'Je voudrais' + pointing = survival in all of France.","The night is dark and full of verbs. ⚡","Streaks are earned after midnight... or any time, really.","Tap me for the install guide. 📲"]},
+  fr:{toEn:"Traduisez en anglais",toFr:"Traduisez en français",listen:"Queentendez-vous ?",build:"Construisez la phrase",
+    check:"Vérifier",cont:"Continuer",right:"✓ Excellent !",wrong:"✗ Pas tout à fait",said:"Vous avez dit",ans:"Réponse",
+    done:"Leçon terminée !",night:"La nuit de Paris est à vous.",oh:"Plus de cœurs...",retry:"Plus de cœurs — mais la nuit est longue. Réessayez !",
+    lXP:"XP gagnés",lA:"Précision",lS:"Série",
+    mascot:["Minou : 15 min par soir garde la série. 🌙","Dites les réponses à voix haute !","Astuce : 'Je voudrais' + désigner = survivre.","La nuit est sombre et pleine de verbes. ⚡","Les séries se gagnent après minuit... ou n'importe quand.","Touchez-moi pour le guide d'installation. 📲"]},
+  es:{toEn:"Traduce al inglés",toFr:"Traduce al francés",listen:"¿Qué escuchas?",build:"Arma la frase",
+    check:"Comprobar",cont:"Continuar",right:"✓ ¡Correcto!",wrong:"✗ Casi, pero no",said:"Dijiste",ans:"Respuesta",
+    done:"¡Lección completa!",night:"La noche de París es tuya.",oh:"¡Sin vidas!",retry:"Sin vidas — pero la noche es larga. ¡Inténtalo!",
+    lXP:"XP ganados",lA:"Precisión",lS:"Racha",
+    mascot:["Minú : 15 min cada noche mantiene la racha. 🌙","Di las respuestas en voz alta.","Tip: 'Je voudrais' + señalar = sobrevivir.","La noche es oscura y llena de verbos. ⚡","Las rachas se ganan después de medianoche... o cuando sea.","Toca para el guía de instalación. 📲"]},
+  ja:{toEn:"英語に訳す",toFr:"フランス語に訳す",listen:"何が聞こえますか？",build:"文を作る",
+    check:"チェック",cont:"つづける",right:"✓ せいかい！",wrong:"✗ ざんねん",said:"こたえ",ans:"こたえ",
+    done:"レッスン完了！",night:"パリの夜はあなたのもの。",oh:"ハートがきれた！",retry:"ハートがきれたけど、夜はながい。もういちど！",
+    lXP:"XP",lA:"せいかく",lS:"れんぞく",
+    mascot:["ミヌー「毎晩15分で連続記録をキープ！🌙」","こたえは声に出して！","ヒント：『Je voudrais』+指さし=フランスで生き抜く。","夜は動詞であふれている。⚡","連続記録は深夜以降…いつでもOK。","インストール案内はわたしをタップ。📲"]},
+  zh:{toEn:"翻译成英文",toFr:"翻译成法文",listen:"你听到了什么？",build:"组句子",
+    check:"检查",cont:"继续",right:"✓ 答对啦！",wrong:"✗ 差一点",said:"你的回答",ans:"答案",
+    done:"课程完成！",night:"巴黎的夜晚属于你。",oh:"心心用完了！",retry:"心心用完——但夜晚还长。再试一次！",
+    lXP:"经验",lA:"正确率",lS:"连续天数",
+    mascot:["米努说：每晚15分钟，连续不断。🌙","把答案念出声。","提示：『Je voudrais』+指一指=在法国活下去。","夜色深沉，满是动词。⚡","连续记录在午夜后……或任何时候。","点我查看安装指南。📲"]}
+};
+/* Vocabulary meaning in each language (keyed by English gloss from COURSE pairs). */
+const MEAN={
+  ja:{"Hello":"こんにちは","Good evening":"こんばんは","Hi (casual)":"やあ","Goodbye":"さようなら","Thank you":"ありがとう","You're welcome":"どういたしまして","Please":"お願いします","Excuse me":"すみません","Sorry":"ごめんなさい","Yes":"はい","No":"いいえ","How's it going?":"元気？","My name is...":"名前は…","I would like":"～がほしい","Where's the bathroom?":"トイレはどこ？","The check, please":"お会計を","How much is it?":"いくらですか？","I'm lost":"道に迷った","Help!":"助けて！","I don't understand":"わかりません","Do you speak English?":"英語を話しますか？","Slower":"もっとゆっくり","I need help":"助けが必要","a coffee":"コーヒー","some water":"水","some wine":"ワイン","a beer":"ビール","the menu":"メニュー","A table for two":"2人席","It's delicious":"おいしい","the bread":"パン","the cheese":"チーズ","I'm hungry":"お腹すいた","too expensive":"高すぎる","I'll take it":"これにする","by card":"カードで","in cash":"現金で","the money":"お金","I am":"私は～です","you are":"あなたは～","he is":"彼は～","I have":"私は～を持っている","you have":"あなたは～を持っている","we have":"私たちは～を持っている","I go / I'm going":"行く","you go":"あなたは行く","we go":"私たちは行く","I do / make":"する","he does":"彼はする","Let's go!":"行こう！","I want":"～がほしい","you want":"あなたは～がほしい","I can":"できる","I must":"～しなければならない","I know":"知っている","I want to leave":"帰りたい","to the left":"左に","to the right":"右に","straight ahead":"まっすぐ","Where is...?":"～はどこ？","near":"近くに","far from":"遠く離れて","the station":"駅","the hotel":"ホテル","the street":"通り","the city":"街","the metro":"メトロ","the night":"夜","today":"今日","tomorrow":"明日","yesterday":"昨日","now":"今","soon":"すぐ","What time is it?":"今何時？","I ate":"食べた","I did":"した","I saw":"見た","I took":"取った","I said":"言った","I had":"あった","I was":"～だった","it was":"～だった","the weather was nice":"天気が良かった","I went":"行った","I left":"出た","two years ago":"2年前","Yeah":"うん","So / as a result":"だから","Anyway":"とにかく","Totally!":"ぜんぜん！","That's awesome":"すごい","That sucks":"最悪","Don't worry":"心配しないで","That works!":"うまくいく","a thing":"もの","work (slang)":"仕事","What's new?":"何か新しい？","Cheers!":"乾杯！"},
+  zh:{"Hello":"你好","Good evening":"晚上好","Hi (casual)":"嗨","Goodbye":"再见","Thank you":"谢谢","You're welcome":"不客气","Please":"请","Excuse me":"打扰一下","Sorry":"抱歉","Yes":"是","No":"不","How's it going?":"最近好吗？","My name is...":"我叫……","I would like":"我想要","Where's the bathroom?":"厕所在哪？","The check, please":"买单","How much is it?":"多少钱？","I'm lost":"我迷路了","Help!":"救命！","I don't understand":"我听不懂","Do you speak English?":"你会说英语吗？","Slower":"慢一点","I need help":"我需要帮助","a coffee":"一杯咖啡","some water":"一些水","some wine":"一些葡萄酒","a beer":"一杯啤酒","the menu":"菜单","A table for two":"两人桌","It's delicious":"很好吃","the bread":"面包","the cheese":"奶酪","I'm hungry":"我饿了","too expensive":"太贵了","I'll take it":"我就要这个","by card":"刷卡","in cash":"付现金","the money":"钱","I am":"我是","you are":"你是","he is":"他是","I have":"我有","you have":"你有","we have":"我们有","I go / I'm going":"我去","you go":"你去","we go":"我们去","I do / make":"我做","he does":"他做","Let's go!":"走吧！","I want":"我想要","you want":"你想要","I can":"我能","I must":"我必须","I know":"我知道","I want to leave":"我想走","to the left":"向左","to the right":"向右","straight ahead":"一直走","Where is...?":"……在哪？","near":"在……附近","far from":"离……远","the station":"车站","the hotel":"酒店","the street":"街道","the city":"城市","the metro":"地铁","the night":"夜晚","today":"今天","tomorrow":"明天","yesterday":"昨天","now":"现在","soon":"很快","What time is it?":"几点了？","I ate":"我吃了","I did":"我做了","I saw":"我看见了","I took":"我拿了","I said":"我说了","I had":"我有过","I was":"我曾是","it was":"它曾是","the weather was nice":"天气很好","I went":"我去了","I left":"我离开了","two years ago":"两年前","Yeah":"对","So / as a result":"所以","Anyway":"总之","Totally!":"完全！","That's awesome":"太棒了","That sucks":"糟透了","Don't worry":"别担心","That works!":"行得通","a thing":"东西","work (slang)":"工作","What's new?":"有什么新鲜事？","Cheers!":"干杯！"}
+};
+const esGloss={}; // English gloss already in COURSE pair[2]; ES uses pair[2] directly
+function T(k){ if(MODE!=='mario'){return UI.en[k];} return (UI[LANG]&&UI[LANG][k]!=null)?UI[LANG][k]:UI.en[k]; }
+function gloss(p){ // p = [fr,pron,en]; show meaning in current lang (en/fr/es show English gloss; ja/zh translated)
+  if(MODE!=='mario')return p[2];
+  if(LANG==='en'||LANG==='fr')return p[2];
+  if(LANG==='es')return p[2];
+  return (MEAN[LANG]&&MEAN[LANG][p[2]])||p[2];
+}
+function applyMarioUI(){
+  const on=MODE==='mario';
+  document.body.classList.toggle('mario',on);
+  $('modeBtn').textContent=on?'🌙':'🍄';
+  $('langBtn').style.display=on?'flex':'none';
+  if(on)$('langBtn').textContent=LANG_NAME[LANG]||'EN';
+  document.title=on?'MINUIT — Mode Arcade':'MINUIT — Learn French Under the Paris Night Sky';
+  syncResultLabels();
+}
+function toggleMode(){ MODE=MODE==='mario'?'sleek':'mario'; localStorage.setItem('minuit_mode',MODE); applyMarioUI(); renderPath(); }
+function cycleLang(){ if(MODE!=='mario')return; const i=LANGS.indexOf(LANG); LANG=LANGS[(i+1)%LANGS.length];
+  localStorage.setItem('minuit_lang',LANG); $('langBtn').textContent=LANG_NAME[LANG]; if($('lessonView').style.display==='block')renderEx(); }
+
 /* ================= STATE ================= */
 const S=JSON.parse(localStorage.getItem('minuit')||'{}');
 S.xp=S.xp||0; S.done=S.done||{}; S.streak=S.streak||0; S.lastDay=S.lastDay||null;
@@ -551,25 +647,25 @@ function renderEx(){
   $('lfill').style.width=(L.i/L.ex.length*100)+'%';
   $('lhearts').textContent='💜 '+L.hearts;
   const fb=$('feedback'); fb.className='feedback'; fb.innerHTML='';
-  const btn=$('checkBtn'); btn.textContent='Check'; btn.disabled=true; btn.classList.remove('continue');
+  const btn=$('checkBtn'); btn.textContent=T('check'); btn.disabled=true; btn.classList.remove('continue');
   let html='';
   if(e.type==='fr2en'){
-    html=`<div class="exType">Translate to English</div>
+    html=`<div class="exType">${T('toEn')}</div>
       <div class="prompt">${e.pair[0]} <button class="hearBtn" onclick="speak('${esc(e.pair[0])}')">🔊</button></div>
       <div class="pron">${e.pair[1]}</div><div class="opts" id="opts"></div>`;
-    area.innerHTML=html; renderOpts(shuffle([e.pair[2],...distractors(e.pair[2],3,2)]),e.pair[2]); speak(e.pair[0]);
+    area.innerHTML=html; renderOpts(shuffle([gloss(e.pair),...distractors(gloss(e.pair),3,2)]),gloss(e.pair)); speak(e.pair[0]);
   }else if(e.type==='en2fr'){
-    html=`<div class="exType">Translate to French</div>
-      <div class="prompt">${e.pair[2]}</div><div class="opts" id="opts"></div>`;
+    html=`<div class="exType">${T('toFr')}</div>
+      <div class="prompt">${gloss(e.pair)}</div><div class="opts" id="opts"></div>`;
     area.innerHTML=html; renderOpts(shuffle([e.pair[0],...distractors(e.pair[0],3,0)]),e.pair[0],true);
   }else if(e.type==='listen'){
-    html=`<div class="exType">What do you hear?</div>
-      <div class="prompt"><button class="hearBtn" style="width:72px;height:72px;font-size:1.8rem" onclick="speak('${esc(e.pair[0])}')">🔊</button> Tap to listen</div>
+    html=`<div class="exType">${T('listen')}</div>
+      <div class="prompt"><button class="hearBtn" style="width:72px;height:72px;font-size:1.8rem" onclick="speak('${esc(e.pair[0])}')">🔊</button> ${T('listen')}</div>
       <div class="opts" id="opts"></div>`;
     area.innerHTML=html; renderOpts(shuffle([e.pair[0],...distractors(e.pair[0],3,0)]),e.pair[0],true); speak(e.pair[0]);
   }else if(e.type==='bank'){
     const words=shuffle(e.s.fr.split(' '));
-    html=`<div class="exType">Build the sentence</div>
+    html=`<div class="exType">${T('build')}</div>
       <div class="prompt">"${e.s.en}"</div>
       <div class="answerZone" id="azone"></div>
       <div class="bank" id="bank">${words.map((w,i)=>`<button class="chip" data-w="${esc(w)}" data-i="${i}" onclick="pickChip(this)">${w}</button>`).join('')}</div>`;
@@ -617,11 +713,11 @@ function onCheck(){
   }
   L.answered=true;
   const fb=$('feedback');
-  if(ok){L.right++; fb.className='feedback good'; fb.innerHTML='✓ Excellent !'; playTone(true);}
+  if(ok){L.right++; fb.className='feedback good'; fb.innerHTML=T('right'); playTone(true);}
   else{L.wrong++; L.hearts--; fb.className='feedback bad';
-    fb.innerHTML=`✗ Pas tout à fait<small>Answer: ${answer}</small>`; playTone(false);
+    fb.innerHTML=`✗ ${T('wrong')}<small>${T('said')} "${L.sel||'—'}" · ${T('ans')}: ${answer}</small>`; playTone(false);
     $('lhearts').textContent='💜 '+L.hearts;}
-  btn.textContent='Continue'; btn.classList.add('continue'); btn.disabled=false;
+  btn.textContent=T('cont'); btn.classList.add('continue'); btn.disabled=false;
 }
 function playTone(good){
   try{ if(!('AudioContext' in window)&&!('webkitAudioContext' in window))return;
@@ -640,15 +736,15 @@ function finishLesson(){
   const gained=(firstTime?20:10)+L.right*2;
   S.done[key]=true; S.xp+=gained; bumpStreak(); save();
   hideView(lessonView); $('checkBar').style.display='none'; showView(resultView);
-  $('resEmoji').textContent='🐈‍⬛'; $('resTitle').textContent='Leçon terminée !';
-  $('resSub').textContent='The Paris night is yours.'; $('resXP').textContent='+'+gained;
+  $('resEmoji').textContent='🐈‍⬛'; $('resTitle').textContent=T('done');
+  $('resSub').textContent=T('night'); $('resXP').textContent='+'+gained;
   $('resAcc').textContent=Math.round(L.right/(L.right+L.wrong||1)*100)+'%';
-  $('resStreak').textContent=S.streak; refreshStats(); confetti();
+  $('resStreak').textContent=S.streak; refreshStats(); syncResultLabels(); confetti();
 }
 function failLesson(){
   hideView(lessonView); $('checkBar').style.display='none'; showView(resultView);
-  $('resEmoji').textContent='😿'; $('resTitle').textContent='Plus de cœurs...';
-  $('resSub').textContent='Out of hearts — but the night is long. Try again!'; $('resXP').textContent='+0';
+  $('resEmoji').textContent='😿'; $('resTitle').textContent=T('oh');
+  $('resSub').textContent=T('retry'); $('resXP').textContent='+0';
   $('resAcc').textContent=Math.round(L.right/(L.right+L.wrong||1)*100)+'%'; $('resStreak').textContent=S.streak;
 }
 function confetti(){
@@ -660,8 +756,9 @@ function confetti(){
 }
 
 /* ================= MASCOT ================= */
-const LINES=["Minou says: 15 minutes a night keeps the streak alive. 🌙","Miaou ! Say every answer out loud — your mouth learns too.","Tip: 'Je voudrais' + pointing = survival in all of France.","The night is dark and full of verbs. ⚡","Streaks are earned after midnight... or any time, really.","Perdu ? Open the install guide — tap me, then 'Add to Home Screen'. 📲"];
-function mascotTalk(){const b=$('bubble'); b.textContent=LINES[Math.floor(Math.random()*LINES.length)];
+const LINES_EN=["Minou says: 15 minutes a night keeps the streak alive. 🌙","Miaou ! Say every answer out loud — your mouth learns too.","Tip: 'Je voudrais' + pointing = survival in all of France.","The night is dark and full of verbs. ⚡","Streaks are earned after midnight... or any time, really.","Perdu ? Open the install guide — tap me, then 'Add to Home Screen'. 📲"];
+function mascotTalk(){const lines=(MODE==='mario')?T('mascot'):LINES_EN; const b=$('bubble');
+  b.textContent=lines[Math.floor(Math.random()*lines.length)];
   b.classList.add('show'); clearTimeout(mascotTalk.t); mascotTalk.t=setTimeout(()=>b.classList.remove('show'),4200);}
 
 /* ================= INSTALL GUIDE ================= */
@@ -734,7 +831,6 @@ async function trCopy(){
 }
 function trSpeak(){
   if(!trLast||!HAS_SPEECH)return;
-  // speak in the TARGET language's voice when possible
   const tgt=$('trTo').value;
   speechSynthesis.cancel();
   const u=new SpeechSynthesisUtterance(trLast);
@@ -743,15 +839,20 @@ function trSpeak(){
   if(v)u.voice=v; u.rate=.9; speechSynthesis.speak(u);
 }
 
-/* ================= splash + a2hs — never trap the user ================= */
-const isIOS=/iP(hone|ad|od)/.test(navigator.platform)||(/Mac/.test(navigator.platform)&&navigator.maxTouchPoints>1);
-const isStandalone=('standalone' in navigator)&&navigator.standalone;
-const hideSplash=()=>{const s=$('splash'); if(s)s.classList.add('hide');};
-const showA2hs=()=>{ if(isIOS&&!isStandalone&&!localStorage.getItem(HIDE_A2HS)){const a=$('a2hs'); if(a)a.style.display='flex';}};
-if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',()=>{setTimeout(hideSplash,500);setTimeout(showA2hs,1200);});}
-else{setTimeout(hideSplash,500);setTimeout(showA2hs,1200);}
-window.addEventListener('load',showA2hs);
-setTimeout(hideSplash,2500);
+/* sync result-stat labels to current language */
+  function syncResultLabels(){ if(!$('lblXP'))return; $('lblXP').textContent=T('lXP'); $('lblA').textContent=T('lA'); $('lblS').textContent=T('lS'); }
+
+  /* ================= splash + a2hs — never trap the user ================= */
+  const isIOS=/iP(hone|ad|od)/.test(navigator.platform)||(/Mac/.test(navigator.platform)&&navigator.maxTouchPoints>1);
+  const isStandalone=('standalone' in navigator)&&navigator.standalone;
+  const hideSplash=()=>{const s=$('splash'); if(s)s.classList.add('hide');};
+  const showA2hs=()=>{ if(isIOS&&!isStandalone&&!localStorage.getItem(HIDE_A2HS)){const a=$('a2hs'); if(a)a.style.display='flex';}};
+  if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',()=>{setTimeout(hideSplash,500);setTimeout(showA2hs,1200);});}
+  else{setTimeout(hideSplash,500);setTimeout(showA2hs,1200);}
+  window.addEventListener('load',showA2hs);
+  setTimeout(hideSplash,2500);
+
+applyMarioUI(); renderPath(); setTimeout(mascotTalk,1200);
 
 if('serviceWorker' in navigator){ navigator.serviceWorker.register('sw.js').catch(()=>{}); }
 </script>
