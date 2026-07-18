@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>MINUIT — Learn French Under the Paris Night Sky</title>
+<style>
+  :root{--bg:#0a0d1a;--neon:#8b6cff;--gold:#ffd166;--ink:#eef0ff;--muted:#9499d4;--panel:#161b38}
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  body{background:var(--bg);color:var(--ink);min-height:100vh;font-family:"SF Pro Rounded","Nunito","Avenir Next",system-ui,sans-serif;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center;overflow-x:hidden}
+  body::before{content:"";position:fixed;inset:0;z-index:-1;background:radial-gradient(120% 60% at 50% -8%,rgba(139,108,255,.3),transparent 60%)}
+  .cat{font-size:5rem;filter:drop-shadow(0 6px 20px rgba(139,108,255,.6))}
+  h1{font-size:2.4rem;font-weight:900;letter-spacing:3px;margin:10px 0}
+  h1 b{color:var(--gold)}
+  .tag{color:var(--muted);font-size:1.05rem;margin-bottom:30px;line-height:1.4;max-width:420px}
+  .qr{background:#fff;border-radius:24px;padding:18px;box-shadow:0 14px 40px rgba(0,0,0,.4);margin-bottom:12px}
+  .qr img{width:220px;height:220px;display:block;border-radius:8px}
+  .qrcap{color:var(--muted);font-size:.85rem;margin-bottom:30px}
+  .btn{display:inline-flex;align-items:center;gap:10px;background:linear-gradient(145deg,var(--neon),#5a3cf0);color:#fff;
+    font-weight:900;font-size:1.1rem;padding:16px 34px;border-radius:18px;text-decoration:none;box-shadow:0 8px 24px rgba(139,108,255,.45);
+    transition:transform .12s}
+  .btn:active{transform:scale(.97)}
+  .feats{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:28px 0;max-width:460px}
+  .chipx{background:var(--panel);border:1px solid rgba(255,255,255,.1);border-radius:99px;padding:7px 14px;font-size:.8rem;color:var(--muted)}
+  .foot{color:var(--muted);font-size:.75rem;margin-top:20px}
+</style>
+</head>
+<body>
+  <div class="cat">🐈‍⬛</div>
+  <h1>MIN<b>UIT</b></h1>
+  <p class="tag">Learn French under the Paris night sky. Free, offline, no App Store. Two modes: a sleek night-sky tutor and a retro arcade edition in 5 languages.</p>
+  <div class="feats">
+    <span class="chipx">🌙 Sleek mode</span><span class="chipx">🍄 Arcade mode</span><span class="chipx">🌐 Translator</span>
+    <span class="chipx">⚡ Blitz game</span><span class="chipx">📖 Phrasebook</span><span class="chipx">🔁 SRS review</span>
+    <span class="chipx">🛡️ Streak shield</span><span class="chipx">🎤 Pronounce</span><span class="chipx">🎧 Ambient</span><span class="chipx">👥 Profiles</span>
+  </div>
+  <div class="qr"><img alt="QR code to MINUIT" src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=https%3A%2F%2Fzeetho.github.io%2Fminuit%2F"></div>
+  <p class="qrcap">Scan to open on your phone → tap <b>Share</b> ⤴ then <b>“Add to Home Screen”</b></p>
+  <a class="btn" href="https://zeetho.github.io/minuit/">▶ Open MINUIT</a>
+  <p class="foot">© MINUIT — built for the night owls. 🌙</p>
+</body>
+</html>

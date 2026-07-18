@@ -262,6 +262,93 @@ body.mario #topbar{background:linear-gradient(180deg,#5c94fc 70%,transparent)}
 body.mario .iconbtn,body.mario .langbtn{font-family:"Press Start 2P",monospace}
 body.mario .feedbk{font-family:"Press Start 2P",monospace;font-size:.62rem}
 
+/* ===== FEATURES (1–10) ===== */
+/* shared modal-ish */
+.feat-modal{position:fixed;inset:0;z-index:400;background:rgba(6,8,16,.82);backdrop-filter:blur(8px);
+  display:none;align-items:center;justify-content:center;padding:18px}
+.feat-modal.show{display:flex;animation:fi .25s ease}
+@keyframes fi{from{opacity:0}to{opacity:1}}
+.feat-card{background:var(--panel);border:1px solid var(--glass-bd);border-radius:24px;width:min(460px,100%);
+  max-height:86vh;overflow-y:auto;position:relative;padding:22px 20px 18px;box-shadow:var(--shadow)}
+.feat-title{font-size:1.2rem;font-weight:900;margin-bottom:12px}
+.feat-sub{color:var(--muted);font-size:.82rem;margin-bottom:14px;line-height:1.35}
+.feat-close{position:absolute;top:14px;right:16px;background:none;border:none;color:var(--muted);font-size:1.3rem;cursor:pointer}
+
+/* F1 ghost streak calendar */
+.ghost-cal{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin:8px 0 14px}
+.ghost-day{aspect-ratio:1;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:800;
+  background:var(--surface);border:1px solid var(--glass-bd);color:var(--muted)}
+.ghost-day.on{background:linear-gradient(145deg,var(--gold),#ffb347);color:#4a3200;border-color:#ffe3a1}
+.ghost-day.frozen{background:linear-gradient(145deg,#7ec8ff,#3aa0ff);color:#06304a;border-color:#bfe6ff}
+.ghost-day.today{box-shadow:0 0 0 2px var(--neon) inset}
+.ghost-note{font-size:.78rem;color:var(--muted);line-height:1.45}
+.ghost-btn{margin-top:10px;width:100%;background:var(--neon);border:none;color:#fff;font-weight:800;padding:12px;border-radius:14px;cursor:pointer;font-size:.9rem}
+
+/* F2 blitz */
+.blitz-hud{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;font-weight:800}
+.blitz-time{font-size:1.3rem;color:var(--pink)}
+.blitz-score{font-size:1.3rem;color:var(--gold)}
+.blitz-q{font-size:1.4rem;font-weight:800;text-align:center;margin:10px 0 16px;line-height:1.3}
+.blitz-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.blitz-opt{background:var(--surface);border:1px solid var(--glass-bd);border-radius:14px;color:var(--ink);padding:14px;font-weight:700;cursor:pointer;font-size:.95rem}
+.blitz-opt:active{transform:scale(.97)}
+.blitz-opt.right{background:rgba(61,220,151,.18);border-color:var(--green)}
+.blitz-opt.wrong{background:rgba(255,92,108,.18);border-color:var(--red)}
+.blitz-opt:disabled{cursor:default}
+.blitz-over{text-align:center;padding:10px 0}
+.blitz-over .big{font-size:2rem;font-weight:900;color:var(--gold)}
+
+/* F3 phrasebook */
+.pb-search{width:100%;background:var(--panel);border:1px solid var(--glass-bd);border-radius:12px;color:var(--ink);padding:12px;font-size:1rem;margin-bottom:12px;outline:none;font-family:inherit}
+.pb-search:focus{border-color:var(--neon)}
+.pb-list{display:flex;flex-direction:column;gap:9px}
+.pb-row{background:var(--surface);border:1px solid var(--glass-bd);border-radius:14px;padding:11px 13px;display:flex;align-items:center;gap:10px}
+.pb-fr{font-weight:800;font-size:1rem;flex:none}
+.pb-pron{color:var(--muted);font-style:italic;font-size:.82rem;flex:1;min-width:0}
+.pb-en{color:var(--muted);font-size:.85rem;margin-left:auto;flex:none;max-width:42%}
+.pb-unit{font-size:.7rem;color:var(--neon);text-transform:uppercase;letter-spacing:1px;margin:14px 0 4px;font-weight:800}
+.pb-hear{background:var(--neon);border:none;border-radius:10px;color:#fff;width:38px;height:38px;font-size:1rem;cursor:pointer;flex:none}
+
+/* F5 Mario coins */
+.coin{position:fixed;z-index:120;font-size:1.4rem;pointer-events:none;animation:coinfly .9s ease-out forwards}
+@keyframes coinfly{from{transform:translateY(0) scale(1);opacity:1}to{transform:translateY(-70px) scale(1.5);opacity:0}}
+body.mario .coin{animation:coinbounce .7s ease-out forwards}
+@keyframes coinbounce{0%{transform:translateY(0)}40%{transform:translateY(-40px) rotate(20deg)}100%{transform:translateY(10px) rotate(0);opacity:0}}
+.pill.coins{color:var(--gold)}
+
+/* F6 mic */
+.mic-wrap{display:flex;flex-direction:column;align-items:center;gap:14px;padding:8px 0}
+.mic-btn{width:90px;height:90px;border-radius:50%;border:none;background:linear-gradient(145deg,var(--red),#b0303c);color:#fff;font-size:2.2rem;cursor:pointer;box-shadow:0 6px 18px rgba(255,92,108,.45);transition:transform .1s}
+.mic-btn:active{transform:scale(.94)}
+.mic-btn.live{animation:micpulse 1s infinite}
+@keyframes micpulse{0%,100%{box-shadow:0 0 0 0 rgba(255,92,108,.5)}50%{box-shadow:0 0 0 16px rgba(255,92,108,0)}}
+.mic-grade{font-size:3rem;font-weight:900;text-align:center}
+.mic-grade.good{color:var(--green)} .mic-grade.ok{color:var(--gold)} .mic-grade.bad{color:var(--red)}
+.mic-word{font-size:1.2rem;font-weight:800;margin-bottom:6px}
+
+/* F7 ambient toggle */
+.iconbtn.on{background:var(--neon);color:#fff}
+
+/* F8 share card */
+.share-canvas-wrap{display:flex;flex-direction:column;align-items:center;gap:12px}
+#shareCanvas{border-radius:18px;max-width:100%;box-shadow:var(--shadow);background:#0a0d1a}
+.share-actions{display:flex;gap:10px}
+
+/* F9 profiles */
+.prof-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 0}
+.prof-tile{background:var(--surface);border:1px solid var(--glass-bd);border-radius:14px;padding:14px;cursor:pointer;text-align:center;font-weight:800}
+.prof-tile.active{border-color:var(--neon);box-shadow:0 0 0 2px var(--neon) inset}
+.prof-tile .em{font-size:1.6rem;display:block;margin-bottom:4px}
+.prof-add{margin-top:6px;width:100%;background:var(--glass);border:1px dashed var(--glass-bd);border-radius:12px;color:var(--muted);padding:11px;cursor:pointer;font-weight:700}
+
+/* small util */
+.feat-btn{display:flex;align-items:center;gap:8px;justify-content:center;width:100%;background:var(--surface);border:1px solid var(--glass-bd);border-radius:14px;color:var(--ink);padding:13px;font-weight:800;font-size:.92rem;cursor:pointer;margin-top:8px}
+.feat-btn:active{transform:scale(.98)}
+.feat-btn .em{font-size:1.2rem}
+body.mario .feat-card{background:#e52521;border:3px solid #fff}
+body.mario .feat-title,body.mario .feat-sub{color:#fff}
+body.mario .prof-tile,body.mario .pb-row,body.mario .blitz-opt,body.mario .ghost-day{font-family:"Press Start 2P","Noto Sans JP",monospace;font-size:.5rem;line-height:1.5}
+
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
@@ -284,9 +371,14 @@ body.mario .feedbk{font-family:"Press Start 2P",monospace;font-size:.62rem}
     <div class="logo"><span class="moon">🌙</span>MIN<b>UIT</b></div>
     <div class="spacer"></div>
     <button class="langbtn" id="langBtn" onclick="cycleLang()" style="display:none"></button>
+    <button class="iconbtn" onclick="openPhrasebook()" title="Phrasebook">📖</button>
+    <button class="iconbtn" onclick="openBlitz()" title="Blitz game">⚡</button>
+    <button class="iconbtn" id="ambientBtn" onclick="toggleAmbient()" title="Ambient sound">🎧</button>
+    <button class="iconbtn" onclick="openProfiles()" title="Profiles">👥</button>
     <button class="iconbtn" onclick="openTranslator()" title="Translator">🌐</button>
     <button class="iconbtn" id="modeBtn" onclick="toggleMode()" title="Switch theme">🍄</button>
-    <div class="pill streak">🔥 <span id="stStreak">0</span></div>
+    <div class="pill coins" id="coinsPill" style="display:none">🪙 <span id="stCoins">0</span></div>
+    <div class="pill streak" onclick="openGhost()" style="cursor:pointer">🔥 <span id="stStreak">0</span></div>
     <div class="pill xp">✦ <span id="stXP">0</span></div>
   </div>
 
@@ -297,6 +389,7 @@ body.mario .feedbk{font-family:"Press Start 2P",monospace;font-size:.62rem}
       <button class="quit" onclick="quitLesson()">✕</button>
       <div class="lbar"><div class="lfill" id="lfill"></div></div>
       <div class="lhearts" id="lhearts">💜 5</div>
+      <button class="quit" onclick="openMic()" title="Pronounce">🎤</button>
     </div>
     <div id="exArea"></div>
   </div>
@@ -311,6 +404,10 @@ body.mario .feedbk{font-family:"Press Start 2P",monospace;font-size:.62rem}
     <div class="resBox"><div class="n" style="color:var(--gold)" id="resStreak">0</div><div class="t" id="lblS">Day streak</div></div>
     </div>
     <button class="bigBtn continue" onclick="backToPath()">Continue</button>
+    <div style="display:flex;gap:10px;margin-top:10px">
+      <button class="feat-btn" style="margin:0" onclick="openReview()"><span class="em">🔁</span> Review mistakes</button>
+      <button class="feat-btn" style="margin:0" onclick="openShare('+'+LAST.gained, LAST.acc, LAST.streak)"><span class="em">📲</span> Share</button>
+    </div>
   </div>
 
   <div class="bubble" id="bubble"></div>
@@ -378,6 +475,86 @@ body.mario .feedbk{font-family:"Press Start 2P",monospace;font-size:.62rem}
         <button class="bigBtn" id="trGo" onclick="trTranslate()" disabled>Translate</button>
       </div>
       <div class="tr-note">Free machine translation · needs internet · no account</div>
+    </div>
+  </div>
+
+  <!-- ===== F1: Streak freeze / ghost calendar ===== -->
+  <div id="ghostModal" class="feat-modal" onclick="if(event.target===this)closeFeat('ghostModal')">
+    <div class="feat-card">
+      <button class="feat-close" onclick="closeFeat('ghostModal')">✕</button>
+      <div class="feat-title">🔥 Streak Shield</div>
+      <div class="feat-sub">Miss a day? Spend a 🛡️ freeze to keep your streak alive. You get a free freeze at 7 days.</div>
+      <div class="ghost-cal" id="ghostCal"></div>
+      <div class="ghost-note" id="ghostNote"></div>
+      <button class="ghost-btn" id="ghostBtn" onclick="useFreeze()">Use 🛡️ Freeze (0 left)</button>
+    </div>
+  </div>
+
+  <!-- ===== F2: Blitz mini-game ===== -->
+  <div id="blitzModal" class="feat-modal" onclick="if(event.target===this)closeFeat('blitzModal')">
+    <div class="feat-card">
+      <button class="feat-close" onclick="closeFeat('blitzModal')">✕</button>
+      <div class="feat-title">⚡ Blitz — 60s Word Race</div>
+      <div class="feat-sub">Tap the matching translation as fast as you can. +1 🪙 per correct.</div>
+      <div class="blitz-hud"><span class="blitz-time" id="blitzTime">60</span><span class="blitz-score" id="blitzScore">0</span></div>
+      <div class="blitz-q" id="blitzQ">Ready?</div>
+      <div class="blitz-grid" id="blitzGrid"></div>
+      <button class="feat-btn" id="blitzStart" onclick="blitzStart()"><span class="em">▶</span> Start</button>
+    </div>
+  </div>
+
+  <!-- ===== F3: Phrasebook ===== -->
+  <div id="pbModal" class="feat-modal" onclick="if(event.target===this)closeFeat('pbModal')">
+    <div class="feat-card">
+      <button class="feat-close" onclick="closeFeat('pbModal')">✕</button>
+      <div class="feat-title">📖 Phrasebook</div>
+      <div class="feat-sub">All vocab, offline. Tap 🔊 to hear it.</div>
+      <input class="pb-search" id="pbSearch" placeholder="Search…" oninput="renderPhrasebook()">
+      <div class="pb-list" id="pbList"></div>
+    </div>
+  </div>
+
+  <!-- ===== F4: SRS review (reuses lesson flow) ===== -->
+
+  <!-- ===== F6: Pronunciation ===== -->
+  <div id="micModal" class="feat-modal" onclick="if(event.target===this)closeFeat('micModal')">
+    <div class="feat-card">
+      <button class="feat-close" onclick="closeFeat('micModal')">✕</button>
+      <div class="feat-title">🎤 Pronounce</div>
+      <div class="feat-sub">Say the word — we grade your accent vs the French voice.</div>
+      <div class="mic-wrap">
+        <div class="mic-word" id="micWord">Bonjour</div>
+        <button class="mic-btn" id="micBtn" onclick="startMic()">🎙️</button>
+        <div class="mic-grade" id="micGrade">—</div>
+        <button class="feat-btn" onclick="micNext()"><span class="em">🔁</span> Next word</button>
+        <button class="feat-btn" onclick="speak($('micWord').textContent)"><span class="em">🔊</span> Hear it</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== F8: Share card ===== -->
+  <div id="shareModal" class="feat-modal" onclick="if(event.target===this)closeFeat('shareModal')">
+    <div class="feat-card">
+      <button class="feat-close" onclick="closeFeat('shareModal')">✕</button>
+      <div class="feat-title">📲 Share your win</div>
+      <div class="feat-sub">Save or post your lesson result.</div>
+      <div class="share-canvas-wrap">
+        <canvas id="shareCanvas" width="420" height="520"></canvas>
+        <div class="share-actions">
+          <button class="feat-btn" style="width:auto;margin:0" onclick="shareDownload()"><span class="em">⬇️</span> Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== F9: Profiles ===== -->
+  <div id="profModal" class="feat-modal" onclick="if(event.target===this)closeFeat('profModal')">
+    <div class="feat-card">
+      <button class="feat-close" onclick="closeFeat('profModal')">✕</button>
+      <div class="feat-title">👥 Profiles</div>
+      <div class="feat-sub">Separate progress per person on this device.</div>
+      <div class="prof-grid" id="profGrid"></div>
+      <button class="prof-add" onclick="addProfile()">＋ New profile</button>
     </div>
   </div>
 
@@ -555,7 +732,7 @@ function applyMarioUI(){
   $('langBtn').style.display=on?'flex':'none';
   if(on)$('langBtn').textContent=LANG_NAME[LANG]||'EN';
   document.title=on?'MINUIT — Mode Arcade':'MINUIT — Learn French Under the Paris Night Sky';
-  syncResultLabels();
+  syncResultLabels(); updateCoins();
 }
 function toggleMode(){ MODE=MODE==='mario'?'sleek':'mario'; localStorage.setItem('minuit_mode',MODE); applyMarioUI(); renderPath(); }
 function cycleLang(){ if(MODE!=='mario')return; const i=LANGS.indexOf(LANG); LANG=LANGS[(i+1)%LANGS.length];
@@ -564,7 +741,8 @@ function cycleLang(){ if(MODE!=='mario')return; const i=LANGS.indexOf(LANG); LAN
 /* ================= STATE ================= */
 const S=JSON.parse(localStorage.getItem('minuit')||'{}');
 S.xp=S.xp||0; S.done=S.done||{}; S.streak=S.streak||0; S.lastDay=S.lastDay||null;
-const save=()=>localStorage.setItem('minuit',JSON.stringify(S));
+const save0=()=>localStorage.setItem('minuit',JSON.stringify(S));
+let save=save0;
 const today=()=>new Date().toISOString().slice(0,10);
 function bumpStreak(){const t=today(); if(S.lastDay===t)return;
   const y=new Date(Date.now()-864e5).toISOString().slice(0,10);
@@ -716,7 +894,7 @@ function onCheck(){
   if(ok){L.right++; fb.className='feedback good'; fb.innerHTML=T('right'); playTone(true);}
   else{L.wrong++; L.hearts--; fb.className='feedback bad';
     fb.innerHTML=`✗ ${T('wrong')}<small>${T('said')} "${L.sel||'—'}" · ${T('ans')}: ${answer}</small>`; playTone(false);
-    $('lhearts').textContent='💜 '+L.hearts;}
+    $('lhearts').textContent='💜 '+L.hearts; _onCheckWrong(); }
   btn.textContent=T('cont'); btn.classList.add('continue'); btn.disabled=false;
 }
 function playTone(good){
@@ -735,12 +913,32 @@ function finishLesson(){
   const key=lessonKey(L.ui,L.li), firstTime=!S.done[key];
   const gained=(firstTime?20:10)+L.right*2;
   S.done[key]=true; S.xp+=gained; bumpStreak(); save();
+  // F1: award a freeze when hitting a 7-day streak (once per day)
+  if(S.streak===7 && !S.freezeGivenDay){ S.freezes=(S.freezes||0)+1; S.freezeGivenDay=today(); }
+  // F5: Mario mode → coin bonus + 1-UP chime
+  if(MODE==='mario'){ S.coins=(S.coins||0)+gained; updateCoins(); coinBurst(window.innerWidth/2,120); oneUp(); }
+  persistProfile();
+  LAST={gained,acc:Math.round(L.right/(L.right+L.wrong||1)*100)+'%',streak:S.streak};
   hideView(lessonView); $('checkBar').style.display='none'; showView(resultView);
   $('resEmoji').textContent='🐈‍⬛'; $('resTitle').textContent=T('done');
   $('resSub').textContent=T('night'); $('resXP').textContent='+'+gained;
-  $('resAcc').textContent=Math.round(L.right/(L.right+L.wrong||1)*100)+'%';
+  $('resAcc').textContent=LAST.acc;
   $('resStreak').textContent=S.streak; refreshStats(); syncResultLabels(); confetti();
+  // hide review/share buttons during an SRS review session
+  $$('.resStats + button, .resStats ~ div .feat-btn').forEach(()=>{});
+  const revBtns=resultView.querySelectorAll('.feat-btn');
+  revBtns.forEach(b=>b.style.display = L.review ? 'none' : '');
 }
+function oneUp(){ // F5 coin sound
+  try{ if(!('AudioContext'in window)&&!('webkitAudioContext'in window))return;
+    const AC=window.AudioContext||window.webkitAudioContext; const ctx=oneUp.ctx||(oneUp.ctx=new AC());
+    const notes=[523,659,784,1047]; notes.forEach((f,i)=>{ const o=ctx.createOscillator(),g=ctx.createGain();
+      o.connect(g); g.connect(ctx.destination); o.frequency.value=f; o.type='square';
+      g.gain.setValueAtTime(.08,ctx.currentTime+i*.08); g.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+i*.08+.18);
+      o.start(ctx.currentTime+i*.08); o.stop(ctx.currentTime+i*.08+.2); });
+  }catch(e){}
+}
+let LAST={gained:0,acc:'0%',streak:0};
 function failLesson(){
   hideView(lessonView); $('checkBar').style.display='none'; showView(resultView);
   $('resEmoji').textContent='😿'; $('resTitle').textContent=T('oh');
@@ -783,9 +981,168 @@ function setPlatform(p,tab){
 }
 function hideA2hs(){ $('a2hs').style.display='none'; localStorage.setItem(HIDE_A2HS,'1'); }
 
+/* ================= FEATURES 1–10 ================= */
+function closeFeat(id){ $(id).classList.remove('show'); }
+
+/* ---- F9: Multi-profile (wraps STATE) ---- */
+const PROF_KEY='minuit_profiles', PROF_CUR='minuit_profile';
+let PROFILES=JSON.parse(localStorage.getItem(PROF_KEY)||'[{"name":"You","emoji":"🐈‍⬛"}]');
+let PROF=localStorage.getItem(PROF_CUR)||'0';
+function profData(){ const p=PROFILES[+PROF]||PROFILES[0]; return p.d||(p.d={xp:0,done:{},streak:0,lastDay:null,freezes:0,coins:0,wrong:{}}); }
+function applyProfile(){ PROF=localStorage.getItem(PROF_CUR)||'0'; const d=profData();
+  S.xp=d.xp||0; S.done=d.done||{}; S.streak=d.streak||0; S.lastDay=d.lastDay||null;
+  S.freezes=d.freezes||0; S.coins=d.coins||0; S.wrong=d.wrong||{}; refreshStats(); updateCoins(); }
+function persistProfile(){ const d=profData(); d.xp=S.xp; d.done=S.done; d.streak=S.streak; d.lastDay=S.lastDay;
+  d.freezes=S.freezes||0; d.coins=S.coins||0; d.wrong=S.wrong||{}; localStorage.setItem(PROF_KEY,JSON.stringify(PROFILES)); }
+function openProfiles(){ renderProfiles(); $('profModal').classList.add('show'); }
+function renderProfiles(){ const g=$('profGrid'); g.innerHTML='';
+  PROFILES.forEach((p,i)=>{ const t=document.createElement('div'); t.className='prof-tile'+(i==+PROF?' active':'');
+    t.innerHTML=`<span class="em">${p.emoji||'🐈‍⬛'}</span>${p.name}`; t.onclick=()=>{localStorage.setItem(PROF_CUR,''+i); applyProfile(); renderPath(); closeFeat('profModal');};
+    g.appendChild(t); }); }
+function addProfile(){ const name=prompt('Profile name?','Kid'); if(!name)return;
+  const em=prompt('Emoji? (e.g. 🧒)','🧒')||'🧒'; PROFILES.push({name,emoji:em,d:{xp:0,done:{},streak:0,lastDay:null,freezes:0,coins:0,wrong:{}}});
+  localStorage.setItem(PROF_KEY,JSON.stringify(PROFILES)); renderProfiles(); }
+
+/* override save() to persist per profile */
+const _save=save0; save=()=>{ _save(); persistProfile(); };
+
+/* coins pill visibility (Mario mode shows coins) */
+function updateCoins(){ $('stCoins').textContent=S.coins||0; $('coinsPill').style.display=(MODE==='mario')?'flex':'none'; }
+
+/* ---- F1: Streak freeze / ghost calendar ---- */
+function openGhost(){ renderGhost(); $('ghostModal').classList.add('show'); }
+function renderGhost(){ const cal=$('ghostCal'); cal.innerHTML=''; const d=profData();
+  const today=new Date();
+  for(let i=6;i>=0;i--){ const dt=new Date(today); dt.setDate(dt.getDate()-i);
+    const ds=dt.toISOString().slice(0,10); const isToday=i===0;
+    const on=d.streak>0 && ds>=(d.lastDay||''); // simplistic: days since lastDay within streak count
+    const frozen=!!(d.frozenDays&&d.frozenDays[ds]);
+    const cell=document.createElement('div');
+    cell.className='ghost-day'+(on?' on':'')+(frozen?' frozen':'')+(isToday?' today':'');
+    cell.textContent=dt.getDate(); cal.appendChild(cell); }
+  $('ghostNote').textContent=`🔥 Streak: ${S.streak} · 🛡️ Freezes: ${S.freezes||0}. Free freeze awarded at 7-day streak.`;
+  $('ghostBtn').textContent=`Use 🛡️ Freeze (${S.freezes||0} left)`;
+  $('ghostBtn').disabled=(S.freezes||0)<=0; }
+function useFreeze(){ if((S.freezes||0)<=0)return; S.freezes--; const d=profData(); d.frozenDays=d.frozenDays||{};
+  d.frozenDays[new Date(Date.now()-864e5).toISOString().slice(0,10)]=true; persistProfile(); renderGhost(); }
+
+/* ---- F2: Blitz mini-game ---- */
+let blitzTimer=null, blitzRunning=false;
+function openBlitz(){ $('blitzModal').classList.add('show'); }
+function blitzStart(){ blitzRunning=true; let time=60,score=0; $('blitzStart').style.display='none';
+  $('blitzTime').textContent=time; $('blitzScore').textContent=score;
+  const next=()=>{ if(!blitzRunning)return;
+    const p=ALLPAIRS[Math.floor(Math.random()*ALLPAIRS.length)]; const correct=p[2];
+    $('blitzQ').textContent=p[0];
+    const opts=shuffle([correct,...distractors(correct,3,2)]);
+    const grid=$('blitzGrid'); grid.innerHTML='';
+    opts.forEach(o=>{ const b=document.createElement('button'); b.className='blitz-opt'; b.textContent=o;
+      b.onclick=()=>{ if(b.disabled)return; grid.querySelectorAll('.blitz-opt').forEach(x=>x.disabled=true);
+        if(o===correct){b.classList.add('right');score++;$('blitzScore').textContent=score;addCoin();}
+        else{b.classList.add('wrong'); grid.querySelectorAll('.blitz-opt').forEach(x=>{if(x.textContent===correct)x.classList.add('right');});
+          loseHeartFx();}
+        setTimeout(next,520); }; grid.appendChild(b); }); };
+  next();
+  blitzTimer=setInterval(()=>{ time--; $('blitzTime').textContent=time; if(time<=0){clearInterval(blitzTimer);blitzRunning=false;
+    $('blitzQ').textContent='Time!'; $('blitzGrid').innerHTML='';
+    const over=document.createElement('div'); over.className='blitz-over';
+    over.innerHTML=`<div class="big">${$('blitzScore').textContent}</div><div>words · +${$('blitzScore').textContent} 🪙</div>`;
+    $('blitzGrid').appendChild(over); $('blitzStart').style.display='block'; $('blitzStart').innerHTML='<span class="em">▶</span> Play again'; } },1000); }
+function addCoin(){ S.coins=(S.coins||0)+1; updateCoins(); persistProfile(); }
+function coinBurst(x,y){ const c=document.createElement('div'); c.className='coin'; c.textContent='🪙';
+  c.style.left=(x||window.innerWidth/2)+'px'; c.style.top=(y||window.innerHeight/2)+'px'; document.body.appendChild(c);
+  setTimeout(()=>c.remove(),900); }
+function loseHeartFx(){ /* subtle: flash */ }
+
+/* ---- F3: Phrasebook ---- */
+function openPhrasebook(){ renderPhrasebook(); $('pbModal').classList.add('show'); }
+function renderPhrasebook(){ const q=$('pbSearch').value.trim().toLowerCase(); const list=$('pbList'); list.innerHTML='';
+  COURSE.forEach(u=>{ const rows=[];
+    u.lessons.forEach(l=>l.pairs.forEach(p=>{ if(!q||p[0].toLowerCase().includes(q)||p[2].toLowerCase().includes(q))
+      rows.push(p); }));
+    if(rows.length){ const head=document.createElement('div'); head.className='pb-unit'; head.textContent=u.unit; list.appendChild(head);
+      rows.forEach(p=>{ const r=document.createElement('div'); r.className='pb-row';
+        r.innerHTML=`<span class="pb-fr">${p[0]}</span><span class="pb-pron">${p[1]}</span><span class="pb-en">${p[2]}</span>`;
+        const h=document.createElement('button'); h.className='pb-hear'; h.textContent='🔊'; h.onclick=()=>speak(p[0]); r.appendChild(h);
+        list.appendChild(r); }); } }); }
+
+/* ---- F4: SRS review queue ---- */
+function openReview(){ const d=profData(); const keys=Object.keys(S.wrong||{});
+  if(!keys.length){ alert('Nothing to review yet — get some words wrong first! 😼'); return; }
+  const pool=[]; keys.forEach(k=>{ const [ui,li]=k.split('_').map(Number); const les=COURSE[ui].lessons[li];
+    (S.wrong[k]||[]).forEach(fr=>{ const pr=les.pairs.find(p=>p[0]===fr)||les.pairs[0]; pool.push({type:'fr2en',pair:pr}); });
+    if(pool.length>8)pool.length=8; });
+  L={ui:0,li:0,ex:shuffle(pool).slice(0,8),i:0,hearts:99,right:0,wrong:0,answered:false,sel:null,review:true};
+  hideView(pathView); hideView(resultView); showView(lessonView); $('checkBar').style.display='block'; $('mascot').style.display='none'; renderEx(); }
+
+/* hook wrong answers into SRS */
+const _onCheckWrong=(e)=>{ const key=lessonKey(L.ui,L.li); const d=profData(); d.wrong=d.wrong||{};
+  const fr=(L.ex[L.i].type==='bank')?L.ex[L.i].s.fr:L.ex[L.i].pair[0];
+  (d.wrong[key]=d.wrong[key]||[]); if(!d.wrong[key].includes(fr))d.wrong[key].push(fr); };
+
+/* ---- F5: Mario coins + 1-UP (hooked in finishLesson via addCoin) ---- */
+
+/* ---- F6: Pronunciation grade (mic) ---- */
+const HAS_MIC=('webkitSpeechRecognition' in window)||('SpeechRecognition' in window);
+let micWords=shuffle(ALLPAIRS).slice(0,20).map(p=>p[0]); let micIdx=0;
+function openMic(){ if(!HAS_MIC){alert('Mic grading needs Chrome/Android or Safari speech. Try the 🔊 hear button instead!');}
+  micNext(); $('micModal').classList.add('show'); }
+function micNext(){ micIdx=(micIdx+1)%micWords.length; $('micWord').textContent=micWords[micIdx];
+  $('micGrade').textContent='—'; $('micGrade').className='mic-grade'; $('micBtn').classList.remove('live'); }
+function startMic(){ if(!HAS_MIC)return; const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  const rec=new SR(); rec.lang='fr-FR'; rec.interimResults=false; rec.maxAlternatives=1;
+  $('micBtn').classList.add('live');
+  rec.onresult=e=>{ const said=(e.results[0][0].transcript||'').toLowerCase().replace(/[?!.]/g,'');
+    const target=$('micWord').textContent.toLowerCase();
+    const sim=(a,b)=>{a=a.replace(/[^a-zàâäéèêëîïôöûüç]/g,'');b=b.replace(/[^a-zàâäéèêëîïôöûüç]/g,'');
+      if(!a||!b)return 0; const m=a.length>b.length?b.length:a.length; let c=0;
+      for(let i=0;i<m;i++)if(a[i]===b[i])c++; return Math.round(c/m*100);};
+    const pct=sim(said,target); const g=$('micGrade'); g.textContent=pct+'%';
+    g.className='mic-grade '+(pct>=85?'good':pct>=60?'ok':'bad'); };
+  rec.onerror=()=>{ $('micGrade').textContent='✗'; $('micGrade').className='mic-grade bad'; };
+  rec.onend=()=>$('micBtn').classList.remove('live');
+  try{rec.start();}catch(_){} }
+
+/* ---- F7: Ambient audio (WebAudio rain) ---- */
+let ambientOn=false, ambientNodes=null;
+function toggleAmbient(){ ambientOn=!ambientOn;
+  $('ambientBtn').classList.toggle('on',ambientOn);
+  if(ambientOn)startAmbient(); else stopAmbient(); }
+function startAmbient(){ if(!('AudioContext'in window)&&!('webkitAudioContext'in window))return;
+  const AC=window.AudioContext||window.webkitAudioContext; const ctx=startAmbient.ctx||(startAmbient.ctx=new AC());
+  const bufferSize=2*ctx.sampleRate; const buf=ctx.createBuffer(1,bufferSize,ctx.sampleRate);
+  const data=buf.getChannelData(0); for(let i=0;i<bufferSize;i++)data[i]=(Math.random()*2-1)*0.18;
+  const noise=ctx.createBufferSource(); noise.buffer=buf; noise.loop=true;
+  const filt=ctx.createBiquadFilter(); filt.type='lowpass'; filt.frequency.value=420;
+  const g=ctx.createGain(); g.gain.value=0.06;
+  noise.connect(filt); filt.connect(g); g.connect(ctx.destination); noise.start();
+  ambientNodes={noise,g}; }
+function stopAmbient(){ if(ambientNodes){try{ambientNodes.noise.stop();}catch(_){} ambientNodes=null;} }
+
+/* ---- F8: Share result card (canvas) ---- */
+function openShare(xp,acc,streak){ const c=$('shareCanvas'); const x=c.getContext&&c.getContext('2d'); if(!x)return;
+  const W=c.width,H=c.height;
+  x.fillStyle='#0a0d1a'; x.fillRect(0,0,W,H);
+  const grd=x.createRadialGradient(W/2,80,20,W/2,80,300); grd.addColorStop(0,'rgba(139,108,255,.5)'); grd.addColorStop(1,'rgba(10,13,26,0)');
+  x.fillStyle=grd; x.fillRect(0,0,W,H);
+  x.textAlign='center';
+  x.font='900 34px sans-serif'; x.fillStyle='#ffd166'; x.fillText('🌙 MINUIT',W/2,70);
+  x.font='800 22px sans-serif'; x.fillStyle='#eef0ff';
+  x.fillText(MODE==='mario'?'MODE ARCADE':'PARIS NIGHT',W/2,120);
+  x.font='64px sans-serif'; x.fillText('🐈‍⬛',W/2,210);
+  x.font='900 26px sans-serif'; x.fillStyle='#3ddc97'; x.fillText((xp||'+0')+' XP',W/2,290);
+  x.font='800 20px sans-serif'; x.fillStyle='#eef0ff'; x.fillText('Accuracy  '+(acc||'0%'),W/2,340);
+  x.fillText('Streak  🔥 '+(streak||0),W/2,380);
+  x.font='600 16px sans-serif'; x.fillStyle='#9499d4';
+  x.fillText('Learn French under the night sky',W/2,460);
+  $('shareModal').classList.add('show'); }
+function shareDownload(){ const c=$('shareCanvas'); const a=document.createElement('a');
+  a.download='minuit-win.png'; a.href=c.toDataURL('image/png'); a.click(); }
+
 /* keyboard: 1-4 select option, Enter = check (lesson only) */
 document.addEventListener('keydown',e=>{
-  if(e.key==='Escape'){ closeInstall(); closeTranslator(); return; }
+  if(e.key==='Escape'){ closeInstall(); closeTranslator();
+    ['ghostModal','blitzModal','pbModal','micModal','shareModal','profModal'].forEach(closeFeat); return; }
   if(e.key==='Enter' && $('translatorModal').classList.contains('show')){ trTranslate(); return; }
   if($('lessonView').style.display!=='block')return;
   if(/^[1-4]$/.test(e.key)){const o=$$('#opts .opt')[+e.key-1]; if(o)o.click();}
@@ -852,7 +1209,7 @@ function trSpeak(){
   window.addEventListener('load',showA2hs);
   setTimeout(hideSplash,2500);
 
-applyMarioUI(); renderPath(); setTimeout(mascotTalk,1200);
+applyMarioUI(); applyProfile(); updateCoins(); renderPath(); setTimeout(mascotTalk,1200);
 
 if('serviceWorker' in navigator){ navigator.serviceWorker.register('sw.js').catch(()=>{}); }
 </script>
